@@ -1,0 +1,1461 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Misi Bumi Kita</title><meta name="description" content="Game edukasi IPAS Qonuni 2 Semester 1 - Kuttab Raudhah Nabawiyah Bogor"></head><body>
+<style>
+:root{
+  --bg:#fff8ec; --bg2:#ffefd2; --card:#ffffff; --ink:#2b2350; --ink2:#5d5680; --line:#ecdcc0;
+  --pri:#1f8a70; --pri2:#16705a; --acc:#ff8a3d; --acc2:#f26b1d; --sky:#3aa0e8; --sea:#bfe3ff; --sea2:#8ccaf5;
+  --land:#9ed36a; --land2:#6fb04a; --ok:#1fa35b; --bad:#e04848; --warn:#f0b429; --gold:#ffc83d;
+  --shadow:0 6px 18px rgba(80,50,10,.12); --r:18px;
+  --w1:#3aa0e8; --w2:#ff8a3d; --w3:#1fa35b; --w4:#2b8fd6; --boss:#8a5cf6;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#17142b; --bg2:#211d3d; --card:#28234a; --ink:#f4f1ff; --ink2:#b9b2de; --line:#3b3566;
+  --sea:#1d3f63; --sea2:#2b5d8c; --land:#5b8f3a; --land2:#46772b; --shadow:0 6px 18px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#17142b; --bg2:#211d3d; --card:#28234a; --ink:#f4f1ff; --ink2:#b9b2de; --line:#3b3566;
+  --sea:#1d3f63; --sea2:#2b5d8c; --land:#5b8f3a; --land2:#46772b; --shadow:0 6px 18px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Baloo 2","Nunito","Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent;min-height:100vh;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3{line-height:1.15;margin:.2em 0 .4em}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 120px}
+/* top bar */
+.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:2px solid var(--line)}
+.topbar .in{max-width:1100px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.05rem;flex:1;min-width:0}
+.brand .logo{font-size:1.6rem}
+.brand span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:700;white-space:nowrap}
+.iconbtn{background:var(--card);border:2px solid var(--line);border-radius:12px;width:40px;height:40px;display:grid;place-items:center;font-size:1.15rem;flex:none}
+.iconbtn:hover{border-color:var(--pri)}
+/* buttons */
+.btn{border:none;border-radius:14px;padding:10px 18px;font-weight:800;background:var(--pri);color:#fff;box-shadow:0 4px 0 var(--pri2);transition:transform .08s,box-shadow .08s;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--pri2)}
+.btn.alt{background:var(--acc);box-shadow:0 4px 0 var(--acc2)}
+.btn.ghost{background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btn.big{font-size:1.2rem;padding:14px 26px}
+/* cards */
+.card{background:var(--card);border:2px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+.hero{text-align:center;padding:26px 16px 10px}
+.hero h1{font-size:clamp(1.8rem,5vw,2.8rem);margin-bottom:.1em}
+.hero p{color:var(--ink2);margin:.2em auto;max-width:640px}
+.hero-art{font-size:clamp(2.4rem,9vw,4rem);letter-spacing:.1em;animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.field{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+.field input{font:inherit;padding:10px 14px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);min-width:240px}
+.grid{display:grid;gap:16px}
+.worlds{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.world{position:relative;overflow:hidden;padding:0}
+.world .head{padding:14px 16px;color:#fff;display:flex;gap:10px;align-items:center}
+.world .head .em{font-size:2rem}
+.world .head small{display:block;opacity:.9;font-weight:600}
+.world .body{padding:12px 14px 14px}
+.lvl{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:8px 10px;margin:6px 0;transition:transform .1s}
+.lvl:hover:not(.locked){transform:translateX(3px);border-color:var(--pri)}
+.lvl .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;flex:none}
+.lvl .tt{flex:1;min-width:0;font-weight:700;line-height:1.15}
+.lvl .tt small{display:block;font-weight:500;color:var(--ink2)}
+.lvl .st{display:block;font-size:.85rem;letter-spacing:-1px;white-space:nowrap;margin-top:2px}
+.lvl.locked{opacity:.5;cursor:not-allowed}
+.stars .off{filter:grayscale(1);opacity:.35}
+.verse{font-style:italic;color:var(--ink2);font-size:.9rem;border-left:4px solid var(--gold);padding:4px 10px;margin:4px 0 8px}
+/* level screen */
+.lvhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+.lvhead h2{flex:1;margin:0;font-size:clamp(1.25rem,3.5vw,1.7rem);min-width:200px}
+.progress{height:12px;background:var(--bg2);border-radius:99px;overflow:hidden;border:2px solid var(--line);flex:1 1 160px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--gold));width:0;transition:width .4s}
+.goal{background:var(--bg2);border-radius:14px;padding:8px 12px;margin-bottom:10px;font-size:.95rem}
+.goal b{color:var(--pri)}
+.prompt{font-weight:700;font-size:1.08rem;margin:6px 0 10px}
+.stage{position:relative}
+/* feedback */
+#fb{position:fixed;left:50%;bottom:14px;transform:translateX(-50%) translateY(140%);width:min(720px,calc(100% - 24px));z-index:40;transition:transform .3s cubic-bezier(.2,1.4,.4,1);border-radius:18px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 10px 30px rgba(0,0,0,.25);background:var(--card);border:3px solid var(--line)}
+#fb.show{transform:translateX(-50%) translateY(0);visibility:visible}
+#fb:not(.show){visibility:hidden;transition:transform .3s, visibility 0s .3s}
+#fb.ok{border-color:var(--ok)} #fb.bad{border-color:var(--bad)} #fb.info{border-color:var(--sky)}
+#fb .ic{font-size:1.8rem;line-height:1}
+#fb .tx{flex:1;font-size:.98rem}
+#fb .x{background:none;border:none;font-size:1.2rem;color:var(--ink2)}
+/* drag & drop */
+.tray{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;min-height:58px;background:var(--bg2);border-radius:16px;border:2px dashed var(--line);margin:10px 0}
+.chip{user-select:none;-webkit-user-select:none;touch-action:none;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:6px 12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;box-shadow:0 3px 0 var(--line);cursor:grab;transition:transform .12s, box-shadow .12s, border-color .12s;font-size:.98rem}
+.chip .e{font-size:1.35rem}
+.chip.sel{border-color:var(--acc);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 35%,transparent);transform:translateY(-3px)}
+.chip.dragging{opacity:.35}
+.chip.done{cursor:default;box-shadow:none;border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--card));font-size:.88rem;padding:3px 8px}
+.chip.done .e{font-size:1.05rem}
+.dragghost{position:fixed;z-index:100;pointer-events:none;transform:translate(-50%,-60%) rotate(-3deg) scale(1.08);box-shadow:0 10px 24px rgba(0,0,0,.25)!important;border-color:var(--acc)!important}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.pop{animation:pop .45s}
+@keyframes pop{40%{transform:scale(1.12)}}
+.bins{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.bin{min-height:120px;border:3px dashed var(--line);border-radius:18px;padding:10px;background:var(--card);transition:border-color .15s, background .15s}
+.bin h4{margin:0 0 6px;display:flex;gap:6px;align-items:center;font-size:1.02rem}
+.bin h4 .e{font-size:1.5rem}
+.bin .sub{font-size:.82rem;color:var(--ink2);margin:-4px 0 6px}
+.bin .in{display:flex;flex-wrap:wrap;gap:5px}
+.dz.hover,.dz.cansel{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card))}
+.bin.good{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.bin.wrong{border-color:var(--bad)}
+/* map */
+.mapbox{position:relative;width:100%;max-width:min(820px,calc((100vh - 240px) * 1.307));min-width:min(100%,300px);margin:0 auto;border-radius:18px;overflow:hidden;border:3px solid var(--line);background:var(--sea)}
+.mapbox svg{display:block;width:100%;height:auto}
+.mz{position:absolute;transform:translate(-50%,-50%);min-width:44px;height:34px;padding:0 8px;border-radius:12px;border:3px dashed #fff;background:rgba(43,35,80,.55);color:#fff;font-weight:800;font-size:.8rem;display:grid;place-items:center;white-space:nowrap}
+.mz.good{background:var(--ok);border-style:solid}
+.mz.hover,.mz.cansel{background:var(--acc)}
+.land{fill:var(--land);stroke:var(--land2);stroke-width:1.5}
+.land.id{fill:#e2574c;stroke:#a8312a}
+.land.dim{fill:color-mix(in srgb,var(--land) 70%,#d9caa0)}
+.eq{stroke:#e04848;stroke-width:2.5;stroke-dasharray:10 7}
+.maplabel{font:700 13px "Baloo 2",sans-serif;fill:#22305a}
+/* misc layouts */
+.two{display:grid;gap:14px;grid-template-columns:1fr}
+@media (min-width:820px){.two{grid-template-columns:1.25fr 1fr}}
+.stickym{position:sticky;top:64px;align-self:start;z-index:5}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media (max-width:819px){.stickym{top:58px;padding:8px 10px}.stickym .meter{margin:2px 0}.stickym .meter .lb{font-size:.8rem}.stickym .btn{padding:6px 12px}.stickym p{margin:4px 0}.qfirst>:last-child{order:-1}.mz{font-size:.68rem;height:28px;min-width:34px;padding:0 5px}}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:8px 14px;font-weight:700;box-shadow:0 3px 0 var(--line)}
+.opt:hover{border-color:var(--sky)}
+.opt.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.opt.no{background:var(--bad);color:#fff;border-color:var(--bad)}
+.opt[disabled]{pointer-events:none}
+.meter{margin:8px 0}
+.meter .lb{display:flex;justify-content:space-between;font-weight:700;font-size:.92rem}
+.meter .bar{position:relative;height:16px;border-radius:99px;background:var(--bg2);border:2px solid var(--line);overflow:hidden}
+.meter .bar i{position:absolute;inset:0 auto 0 0;width:0;transition:width .35s;border-radius:99px}
+.meter .bar .tg{position:absolute;top:-2px;bottom:-2px;width:3px;background:var(--ink)}
+.acts{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr))}
+.act{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:8px 10px;display:flex;gap:8px;align-items:flex-start;box-shadow:0 3px 0 var(--line)}
+.act .e{font-size:1.6rem}
+.act b{display:block;line-height:1.15}
+.act small{color:var(--ink2)}
+.act.on{border-color:var(--pri);background:color-mix(in srgb,var(--pri) 14%,var(--card))}
+.act.badpick{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;border-radius:6px;padding:0 6px;color:#fff;margin-top:2px}
+.slots{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin:10px 0}
+.slot{min-width:110px;min-height:84px;border:3px dashed var(--line);border-radius:16px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;text-align:center}
+.slot .cap{font-size:.75rem;font-weight:800;color:var(--ink2);text-transform:uppercase;letter-spacing:.03em}
+.slot.good{border-color:var(--ok);border-style:solid}
+.slot.wrong{border-color:var(--bad);border-style:solid}
+.arrow{font-size:1.5rem;color:var(--ink2);font-weight:800}
+.scene{align-self:start;width:100%;max-width:min(820px,calc((100vh - 240px) * 1.78));min-width:min(100%,300px);margin:0 auto;display:block;border-radius:18px;border:3px solid var(--line);overflow:hidden;position:relative;background:linear-gradient(#bfe6ff,#eaf7ff)}
+.scene svg{display:block;width:100%;height:auto}
+.log{font-size:.9rem;background:var(--bg2);border-radius:12px;padding:8px 10px;max-height:150px;overflow:auto}
+.log div{padding:2px 0;border-bottom:1px dashed var(--line)}
+.kpi{display:flex;gap:8px;flex-wrap:wrap}
+.kpi .pill{font-size:.92rem}
+.chart{width:100%;height:auto;background:var(--card);border-radius:14px;border:2px solid var(--line)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.88rem;font-weight:700}
+.legend i{display:inline-block;width:14px;height:6px;border-radius:3px;margin-right:4px;vertical-align:middle}
+.samples{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+.sample{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:8px;text-align:center;font-weight:700;font-size:.88rem}
+.sample.cur{border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 30%,transparent)}
+.sample.okd{border-color:var(--ok)} .sample.badd{border-color:var(--bad)}
+.sample .bk{font-size:1.8rem}
+.house{position:relative}
+.tap{position:absolute;transform:translate(-50%,-50%);background:var(--card);border:3px solid var(--line);border-radius:14px;padding:4px 8px;font-weight:800;font-size:.8rem;display:flex;flex-direction:column;align-items:center;min-width:70px}
+.tap .e{font-size:1.6rem;line-height:1}
+.tap.leak{border-color:var(--sky)}
+.tap.fixed{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--card))}
+.drop{position:absolute;width:8px;height:11px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#3aa0e8;left:50%;top:70%;animation:drip 1s linear infinite}
+@keyframes drip{0%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,26px);opacity:0}}
+.timer{font-size:1.4rem;font-weight:800}
+.hearts{letter-spacing:2px;font-size:1.3rem}
+.bigq{font-size:clamp(1.15rem,3.5vw,1.45rem);font-weight:800;text-align:center;padding:18px 10px;min-height:110px;display:grid;place-items:center}
+.tbar{height:10px;border-radius:99px;background:var(--bg2);overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--acc);width:100%}
+/* modal */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(20,15,40,.55);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.show{display:flex}
+.modal .box{background:var(--card);border-radius:22px;max-width:680px;width:100%;max-height:88vh;overflow:auto;padding:20px;border:3px solid var(--line);animation:pop .4s}
+.bigstars{font-size:3rem;text-align:center;letter-spacing:6px}
+.center{text-align:center}
+.muted{color:var(--ink2)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.c{justify-content:center}
+table.rap{width:100%;border-collapse:collapse;font-size:.92rem}
+table.rap th,table.rap td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top}
+.badge{display:inline-block;border-radius:8px;padding:0 8px;font-weight:800;font-size:.8rem;color:#fff}
+.confetti{position:fixed;top:-20px;z-index:70;font-size:1.4rem;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.refs li{margin-bottom:8px;font-size:.9rem}
+.small{font-size:.86rem}
+.hide{display:none!important}
+@media print{.topbar,#fb,.noprint{display:none!important} body{background:#fff;color:#000} .modal{position:static;display:block;background:none;padding:0} .modal .box{max-height:none;border:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+
+<div class="topbar"><div class="in">
+  <div class="brand"><span class="logo">🚀</span><span class="t">Misi Bumi Kita</span></div>
+  <span class="pill" title="Total poin">⭐ <b id="tot">0</b></span>
+  <button class="iconbtn" id="btnHome" title="Peta petualangan" aria-label="Peta petualangan">🗺️</button>
+  <button class="iconbtn" id="btnRapor" title="Rapor belajar" aria-label="Rapor belajar">📋</button>
+  <button class="iconbtn" id="btnSnd" title="Suara" aria-label="Suara">🔊</button>
+</div></div>
+<main class="wrap" id="app"></main>
+<div id="fb" role="status" aria-live="polite"><div class="ic"></div><div class="tx"></div><button class="x" aria-label="Tutup">✕</button></div>
+<div class="modal" id="modal"><div class="box" id="mbox"></div></div>
+<script>
+"use strict";
+/* ============ UTIL ============ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+function h(tag, attrs = {}, ...kids) {
+  const el = document.createElement(tag);
+  for (const k in attrs) {
+    const v = attrs[k];
+    if (k === "class") el.className = v;
+    else if (k === "html") el.innerHTML = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) el.setAttribute(k, v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(c));
+  return el;
+}
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const fmt = (n, d = 1) => n.toLocaleString("id-ID", { maximumFractionDigits: d, minimumFractionDigits: 0 });
+
+/* ============ STORAGE (opsional) ============ */
+const STORE_KEY = "misi-bumi-kita-q2-v1";
+let S = { name: "", best: {}, muted: false, guru: false };
+try { const raw = localStorage.getItem(STORE_KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
+function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {} }
+
+/* ============ AUDIO (Web Audio, tanpa file) ============ */
+const SND = (() => {
+  let ctx = null;
+  const ac = () => { if (!ctx) { try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (ctx && ctx.state === "suspended") ctx.resume(); return ctx; };
+  function tone(f, t0, dur, type = "sine", vol = .18) {
+    const c = ac(); if (!c || S.muted) return;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, c.currentTime + t0);
+    g.gain.setValueAtTime(0, c.currentTime + t0);
+    g.gain.linearRampToValueAtTime(vol, c.currentTime + t0 + .02);
+    g.gain.exponentialRampToValueAtTime(.001, c.currentTime + t0 + dur);
+    o.connect(g).connect(c.destination); o.start(c.currentTime + t0); o.stop(c.currentTime + t0 + dur + .05);
+  }
+  function noise(dur = .4, vol = .08) {
+    const c = ac(); if (!c || S.muted) return;
+    const b = c.createBuffer(1, c.sampleRate * dur, c.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+    const s = c.createBufferSource(), g = c.createGain(), f = c.createBiquadFilter();
+    f.type = "highpass"; f.frequency.value = 1800; g.gain.value = vol;
+    s.buffer = b; s.connect(f).connect(g).connect(c.destination); s.start();
+  }
+  return {
+    click: () => tone(660, 0, .07, "triangle", .1),
+    pick: () => tone(520, 0, .08, "triangle", .12),
+    ok: () => { tone(660, 0, .12, "triangle"); tone(990, .1, .18, "triangle"); },
+    bad: () => { tone(180, 0, .22, "sawtooth", .1); tone(140, .12, .25, "sawtooth", .08); },
+    win: () => [523, 659, 784, 1046].forEach((f, i) => tone(f, i * .12, .3, "triangle", .16)),
+    drip: () => tone(1400, 0, .05, "sine", .05),
+    rain: () => noise(.8, .06),
+    wind: () => noise(.6, .04),
+    tick: () => tone(880, 0, .04, "square", .04)
+  };
+})();
+
+/* ============ FEEDBACK ============ */
+let fbTimer = null;
+function fb(msg, type = "info", ms = 5200) {
+  const box = $("#fb");
+  box.className = "show " + type;
+  $(".ic", box).textContent = type === "ok" ? "✅" : type === "bad" ? "🤔" : "💡";
+  $(".tx", box).innerHTML = msg;
+  clearTimeout(fbTimer);
+  if (ms) fbTimer = setTimeout(() => box.classList.remove("show"), ms);
+}
+$("#fb .x").onclick = () => $("#fb").classList.remove("show");
+
+/* ============ DRAG & DROP + TAP ============ */
+const DnD = {
+  sel: null, onDrop: null,
+  select(el) {
+    if (this.sel) this.sel.classList.remove("sel");
+    $$(".dz").forEach(z => z.classList.remove("cansel"));
+    if (el && el !== this.sel) { this.sel = el; el.classList.add("sel"); $$(".dz").forEach(z => z.classList.add("cansel")); SND.pick(); }
+    else this.sel = null;
+  },
+  clear() { this.select(null); this.sel = null; $$(".dz").forEach(z => z.classList.remove("cansel", "hover")); },
+  make(el) {
+    el.addEventListener("pointerdown", e => {
+      if (el.classList.contains("done") || e.button > 0) return;
+      e.preventDefault();
+      const sx = e.clientX, sy = e.clientY; let ghost = null, last = null;
+      try { el.setPointerCapture(e.pointerId); } catch (_) {}
+      const mv = ev => {
+        if (!ghost && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 8) {
+          ghost = el.cloneNode(true); ghost.classList.add("dragghost"); ghost.classList.remove("sel"); document.body.append(ghost); el.classList.add("dragging");
+        }
+        if (ghost) {
+          ghost.style.left = ev.clientX + "px"; ghost.style.top = ev.clientY + "px";
+          if (ev.clientY > innerHeight - 50) scrollBy(0, 14); else if (ev.clientY < 90) scrollBy(0, -14);
+          const z = zoneAt(ev.clientX, ev.clientY);
+          if (z !== last) { last && last.classList.remove("hover"); z && z.classList.add("hover"); last = z; }
+        }
+      };
+      const up = ev => {
+        el.removeEventListener("pointermove", mv); el.removeEventListener("pointerup", up); el.removeEventListener("pointercancel", up);
+        if (ghost) {
+          ghost.remove(); el.classList.remove("dragging"); last && last.classList.remove("hover");
+          const z = ev.type === "pointerup" ? zoneAt(ev.clientX, ev.clientY) : null;
+          if (z && DnD.onDrop) { DnD.clear(); DnD.onDrop(el, z); }
+        } else DnD.select(el);
+      };
+      el.addEventListener("pointermove", mv); el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
+    });
+    el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); DnD.select(el); } });
+    el.tabIndex = 0;
+  }
+};
+function zoneAt(x, y) { const t = document.elementFromPoint(x, y); return t ? t.closest(".dz") : null; }
+document.addEventListener("click", e => {
+  const z = e.target.closest(".dz");
+  if (z && DnD.sel && DnD.onDrop && !e.target.closest(".chip")) { const it = DnD.sel; DnD.clear(); DnD.onDrop(it, z); }
+});
+function chip(it) {
+  const c = h("span", { class: "chip", role: "button", "aria-label": it.t }, it.e ? h("span", { class: "e" }, it.e) : null, it.t);
+  c._it = it; DnD.make(c); return c;
+}
+
+/* ============ CONFETTI ============ */
+function confetti(n = 28) {
+  const set = ["🎉", "⭐", "✨", "🌟", "🎊"];
+  for (let i = 0; i < n; i++) {
+    const s = h("div", { class: "confetti" }, set[i % set.length]);
+    s.style.left = Math.random() * 100 + "vw"; s.style.animationDuration = 1.8 + Math.random() * 1.8 + "s"; s.style.animationDelay = Math.random() * .5 + "s";
+    document.body.append(s); setTimeout(() => s.remove(), 4200);
+  }
+}
+
+/* ============ MODAL ============ */
+function modal(content, onClose) {
+  const m = $("#modal"), b = $("#mbox");
+  b.innerHTML = ""; b.append(content); m.classList.add("show"); $("#fb").classList.remove("show");
+  m.onclick = e => { if (e.target === m) { closeModal(); onClose && onClose(); } };
+}
+function closeModal() { $("#modal").classList.remove("show"); }
+/* ============ DEFINISI LEVEL ============ */
+const WORLDS = [
+  { id: "w1", name: "Energi di Sekitarku", em: "⚡", col: "var(--w1)", bab: "Bab 1", pert: "Pertemuan 1–4",
+    verse: "“dan Kami menjadikan pelita yang terang-benderang (matahari).” (QS. An-Naba': 13)" },
+  { id: "w2", name: "Gaya di Sekitar Kita", em: "🧲", col: "var(--w2)", bab: "Bab 2", pert: "Pertemuan 5–8",
+    verse: "“…dan Kami menurunkan besi yang padanya terdapat kekuatan yang hebat dan berbagai manfaat bagi manusia…” (QS. Al-Hadid: 25)" },
+  { id: "w3", name: "Di Sini Tempat Tinggalku", em: "🏡", col: "var(--w3)", bab: "Bab 3", pert: "Pertemuan 9–12",
+    verse: "“…Kami jadikan kamu berbangsa-bangsa dan bersuku-suku agar kamu saling mengenal…” (QS. Al-Hujurat: 13)" },
+  { id: "w4", name: "Iklim dan Perubahannya", em: "🌦️", col: "var(--w4)", bab: "Bab 4", pert: "Pertemuan 13–16",
+    verse: "“Telah tampak kerusakan di darat dan di laut disebabkan karena perbuatan tangan manusia…” (QS. Ar-Rum: 41)" }
+];
+const LEVELS = []; // diisi di p4
+const L = (o) => LEVELS.push(o);
+const levelById = id => LEVELS.find(l => l.id === id);
+const stars = sc => sc >= 90 ? 3 : sc >= 70 ? 2 : sc > 0 ? 1 : 0;
+const starStr = n => [1, 2, 3].map(i => `<span class="${i <= n ? "" : "off"}">⭐</span>`).join("");
+const doneCount = () => LEVELS.filter(l => S.best[l.id] > 0 && l.world !== "boss").length;
+function unlocked(lv) {
+  if (S.guru) return true;
+  if (lv.world === "boss") return doneCount() >= 9;
+  const same = LEVELS.filter(l => l.world === lv.world);
+  const i = same.indexOf(lv);
+  return i === 0 || S.best[same[i - 1].id] > 0;
+}
+function totalPts() { return Object.values(S.best).reduce((a, b) => a + b, 0); }
+function updTop() { $("#tot").textContent = totalPts(); $("#btnSnd").textContent = S.muted ? "🔇" : "🔊"; }
+
+/* ============ LAYAR: BERANDA ============ */
+function home() {
+  DnD.clear(); const app = $("#app"); app.innerHTML = "";
+  const hero = h("div", { class: "hero" },
+    h("div", { class: "hero-art", "aria-hidden": "true" }, "⚡🧲🏡🌦️"),
+    h("h1", {}, "Misi Bumi Kita"),
+    h("p", {}, "Petualangan IPAS Qonuni 2 · Kuttab Raudhah Nabawiyah Bogor"),
+    h("p", { class: "small" }, "Nyalakan kincir angin, luncurkan balok, uji magnet, melompat di Bulan, jelajahi denah kuttab, dan selamatkan iklim bumi. Setiap misi melatih tujuan belajar Semester 1."));
+  const inp = h("input", { id: "nm", placeholder: "Tulis namamu, Ananda…", value: S.name || "", maxlength: 30, "aria-label": "Nama pemain" });
+  const go = h("button", { class: "btn big", onclick: () => { S.name = inp.value.trim() || "Penjelajah"; save(); SND.win(); worldMap(); } }, "🚀 Mulai Misi");
+  inp.addEventListener("keydown", e => { if (e.key === "Enter") go.click(); });
+  const row = h("div", { class: "field" }, inp, go);
+  const row2 = h("div", { class: "row c" },
+    h("button", { class: "btn ghost", onclick: guide }, "📖 Cara Bermain"),
+    h("button", { class: "btn ghost", onclick: forTeacher }, "👩‍🏫 Untuk Guru & Referensi"));
+  app.append(hero, row, row2);
+}
+
+/* ============ LAYAR: PETA DUNIA ============ */
+function worldMap() {
+  DnD.clear(); const app = $("#app"); app.innerHTML = ""; updTop();
+  app.append(h("div", { class: "lvhead" },
+    h("h2", {}, `Assalamu'alaikum, ${S.name || "Penjelajah"}! Pilih tantangan`),
+    h("span", { class: "pill" }, `🏁 ${doneCount()}/${LEVELS.length - 1} misi`)));
+  const g = h("div", { class: "grid worlds" });
+  for (const w of WORLDS) {
+    const body = h("div", { class: "body" }, h("div", { class: "verse" }, w.verse));
+    LEVELS.filter(l => l.world === w.id).forEach((l, i) => body.append(lvlBtn(l, i + 1, w.col)));
+    g.append(h("div", { class: "card world" },
+      h("div", { class: "head", style: `background:${w.col}` }, h("span", { class: "em" }, w.em), h("div", {}, h("b", {}, w.name), h("small", {}, `${w.bab} · ${w.pert}`))), body));
+  }
+  const boss = LEVELS.find(l => l.world === "boss");
+  const bb = h("div", { class: "body" }, h("div", { class: "verse" }, "“Tidaklah seorang muslim menanam pohon atau menanam tanaman, lalu (hasilnya) dimakan oleh burung, manusia, atau binatang, melainkan menjadi sedekah baginya.” (HR. Al-Bukhari dan Muslim)"), lvlBtn(boss, "★", "var(--boss)"));
+  if (!unlocked(boss)) bb.append(h("p", { class: "small muted" }, `Terbuka setelah 9 misi selesai (sekarang ${doneCount()}).`));
+  g.append(h("div", { class: "card world" }, h("div", { class: "head", style: "background:var(--boss)" }, h("span", { class: "em" }, "🏆"), h("div", {}, h("b", {}, "Misi Akhir"), h("small", {}, "Review Semester · Pertemuan 16"))), bb));
+  app.append(g);
+  app.append(h("div", { class: "row c", style: "margin-top:16px" },
+    h("button", { class: "btn ghost", onclick: rapor }, "📋 Lihat Rapor"),
+    h("button", { class: "btn ghost", onclick: guide }, "📖 Cara Bermain"),
+    h("button", { class: "btn ghost", onclick: forTeacher }, "👩‍🏫 Untuk Guru")));
+}
+function lvlBtn(l, n, col) {
+  const ok = unlocked(l), best = S.best[l.id] || 0;
+  const b = h("button", { class: "lvl" + (ok ? "" : " locked"), "aria-label": l.title },
+    h("span", { class: "n", style: `background:${col}` }, ok ? n : "🔒"),
+    h("span", { class: "tt", html: `${l.em} ${l.title}<small>${l.sub}</small><span class="st stars">${starStr(stars(best))}${best ? ` <small style="display:inline">${best} poin</small>` : ""}</span>` }));
+  b.onclick = () => { if (!ok) { SND.bad(); fb("Selesaikan dulu tantangan sebelumnya ya. 🔒", "info", 2500); return; } SND.click(); play(l); };
+  return b;
+}
+
+/* ============ KERANGKA LEVEL ============ */
+let CUR = null;
+function play(l) {
+  DnD.clear(); $("#fb").classList.remove("show");
+  const app = $("#app"); app.innerHTML = "";
+  const prog = h("div", { class: "progress", title: "Kemajuan" }, h("i"));
+  const scoreP = h("span", { class: "pill" }, "🎯 ", h("b", { id: "lvsc" }, "0"));
+  app.append(h("div", { class: "lvhead" },
+    h("button", { class: "iconbtn", onclick: () => { CUR && CUR.stop && CUR.stop(); worldMap(); }, "aria-label": "Kembali ke peta" }, "←"),
+    h("h2", {}, `${l.em} ${l.title}`), prog, scoreP));
+  app.append(h("div", { class: "goal", html: `<b>Aku bisa…</b> ${l.tp}<br><span class="muted small">${l.ref}</span>` }));
+  const stage = h("div", { class: "stage" }); app.append(stage);
+  CUR = { l, stop: null };
+  const api = {
+    stage,
+    prog: f => { $("i", prog).style.width = clamp(f, 0, 1) * 100 + "%"; },
+    score: v => { $("#lvsc").textContent = Math.round(v); },
+    finish: (score, notes) => finish(l, Math.round(clamp(score, 0, 100)), notes),
+    onStop: f => { CUR.stop = f; }
+  };
+  window.scrollTo({ top: 0 });
+  l.run(api);
+}
+function finish(l, score, notes = "") {
+  CUR && CUR.stop && CUR.stop();
+  const prev = S.best[l.id] || 0;
+  if (score > prev) S.best[l.id] = score;
+  save(); updTop();
+  const st = stars(score);
+  SND.win(); if (st >= 2) confetti();
+  const msg = st === 3 ? "Luar biasa! Masya Allah, pemahamanmu sangat baik." : st === 2 ? "Bagus! Sedikit lagi menuju sempurna." : "Alhamdulillah selesai! Coba lagi untuk meraih bintang lebih banyak.";
+  const same = LEVELS.filter(x => x.world === l.world), nx = same[same.indexOf(l) + 1];
+  const box = h("div", {},
+    h("div", { class: "bigstars stars", html: starStr(st) }),
+    h("h2", { class: "center" }, `${l.title}: ${score} poin`),
+    h("p", { class: "center" }, msg),
+    notes ? h("div", { class: "goal", html: `<b>Ingat ya:</b> ${notes}` }) : null,
+    prev ? h("p", { class: "center small muted" }, `Nilai terbaikmu: ${Math.max(prev, score)}`) : null,
+    h("div", { class: "row c" },
+      h("button", { class: "btn ghost", onclick: () => { closeModal(); play(l); } }, "🔁 Ulangi"),
+      h("button", { class: "btn ghost", onclick: () => { closeModal(); worldMap(); } }, "🗺️ Peta"),
+      nx && unlocked(nx) ? h("button", { class: "btn", onclick: () => { closeModal(); play(nx); } }, "Lanjut ➜") : null));
+  modal(box, worldMap);
+}
+
+/* ============ MESIN 1: PILAH (sorter) ============ */
+// rounds: [{prompt, bins:[{id,t,e,sub}], items:[{t,e,bin,why}]}]
+function sorter(api, rounds, notes, onDone, progBase = 0, progSpan = 1) {
+  let r = 0, total = rounds.reduce((a, x) => a + x.items.length, 0), first = 0, doneN = 0;
+  const tried = new Set();
+  function round() {
+    const R = rounds[r], st = api.stage; st.innerHTML = "";
+    st.append(h("div", { class: "prompt" }, `Babak ${r + 1}/${rounds.length} · ${R.prompt}`));
+    st.append(h("p", { class: "small muted" }, "Seret kartu ke kotak yang tepat — atau ketuk kartu lalu ketuk kotaknya."));
+    const tray = h("div", { class: "tray" });
+    shuffle(R.items).forEach(it => tray.append(chip(it)));
+    const bins = h("div", { class: "bins" });
+    R.bins.forEach(b => bins.append(h("div", { class: "bin dz", "data-id": b.id },
+      h("h4", {}, h("span", { class: "e" }, b.e || ""), b.t), b.sub ? h("div", { class: "sub" }, b.sub) : null, h("div", { class: "in" }))));
+    st.append(tray, bins);
+    let left = R.items.length;
+    DnD.onDrop = (c, z) => {
+      const it = c._it, key = r + "|" + it.t;
+      if (z.dataset.id === it.bin) {
+        if (!tried.has(key)) first++;
+        c.classList.remove("sel"); c.classList.add("done"); $(".in", z).append(c);
+        z.classList.add("good"); setTimeout(() => z.classList.remove("good"), 500);
+        SND.ok(); fb(`<b>${it.t}</b> ✔ ${it.why}`, "ok"); left--; doneN++;
+        api.prog(progBase + progSpan * doneN / total); if (!onDone) api.score(first / total * 100);
+        if (!left) setTimeout(() => { r++; r < rounds.length ? round() : (onDone ? onDone(first / total * 100) : api.finish(first / total * 100, notes)); }, 900);
+      } else {
+        tried.add(key); SND.bad(); c.classList.add("shake"); z.classList.add("wrong");
+        setTimeout(() => { c.classList.remove("shake"); z.classList.remove("wrong"); }, 450);
+        fb(`<b>${it.t}</b> belum tepat di sini. ${it.hint || "Petunjuk: " + it.why}`, "bad", 6500);
+      }
+    };
+  }
+  round();
+}
+
+/* ============ MESIN 2: TEMPEL LABEL DI GAMBAR/PETA ============ */
+// rounds: [{prompt, svg, zones:[{id,x,y}] (persen), items:[{t,e,id,why}]}]
+function labeler(api, rounds, notes, offset = 0, totalOverride) {
+  let r = 0; const total = totalOverride || rounds.reduce((a, x) => a + x.items.length, 0); let first = 0, doneN = 0; const tried = new Set();
+  return new Promise(res => {
+    function round() {
+      const R = rounds[r], st = api.stage; st.innerHTML = "";
+      st.append(h("div", { class: "prompt" }, `${R.title || "Babak " + (r + 1) + "/" + rounds.length} · ${R.prompt}`));
+      const box = h("div", { class: R.cls || "mapbox", html: R.svg });
+      R.zones.forEach(zn => { const d = h("div", { class: "mz dz", "data-id": zn.id, "aria-label": "Tempat label" }, "?"); d.style.left = zn.x + "%"; d.style.top = zn.y + "%"; box.append(d); });
+      const tray = h("div", { class: "tray" }); shuffle(R.items).forEach(it => tray.append(chip(it)));
+      st.append(h("p", { class: "small muted" }, "Seret label ke tanda ? yang tepat (atau ketuk label, lalu ketuk tanda ?)."), tray, box);
+      let left = R.items.length;
+      DnD.onDrop = (c, z) => {
+        const it = c._it, key = r + "|" + it.t;
+        if (z.classList.contains("good")) return;
+        if (z.dataset.id === it.id) {
+          if (!tried.has(key)) first++;
+          z.classList.add("good", "pop"); z.textContent = (it.e ? it.e + " " : "") + (it.s || it.t); c.remove();
+          SND.ok(); fb(`<b>${it.t}</b> ✔ ${it.why}`, "ok"); left--; doneN++;
+          api.prog((offset + doneN) / (offset + total)); api.score(first / total * 100);
+          if (!left) setTimeout(() => { r++; if (r < rounds.length) round(); else res(first / total * 100); }, 1000);
+        } else {
+          tried.add(key); SND.bad(); c.classList.add("shake"); setTimeout(() => c.classList.remove("shake"), 450);
+          fb(`<b>${it.t}</b> bukan di situ. ${it.hint || ""}`, "bad", 6000);
+        }
+      };
+    }
+    round();
+  });
+}
+
+/* ============ MESIN 3: URUTKAN ============ */
+// cards: urutan benar. Pemain mengetuk kartu untuk mengisi urutan.
+function sequencer(api, { prompt, cards, why }, onDone) {
+  const st = api.stage; st.innerHTML = "";
+  st.append(h("div", { class: "prompt" }, prompt), h("p", { class: "small muted" }, "Ketuk kartu sesuai urutan. Ketuk kartu di urutan untuk mengembalikannya."));
+  const slots = h("div", { class: "slots", style: "flex-direction:column;align-items:stretch" });
+  const pool = h("div", { class: "tray" });
+  let seq = [], tries = 0;
+  const draw = () => {
+    slots.innerHTML = "";
+    cards.forEach((_, i) => {
+      const c = seq[i];
+      const s = h("div", { class: "slot", style: "min-height:52px;flex-direction:row;gap:8px;justify-content:flex-start" }, h("span", { class: "badge", style: "background:var(--boss)" }, i + 1), c ? h("span", {}, c.e + " " + c.t) : h("span", { class: "muted small" }, "…"));
+      if (c) s.onclick = () => { seq.splice(i, 1); SND.click(); draw(); };
+      slots.append(s);
+    });
+    pool.innerHTML = "";
+    shuffledCards.filter(c => !seq.includes(c)).forEach(c => pool.append(h("button", { class: "opt", onclick: () => { seq.push(c); SND.pick(); draw(); } }, c.e + " " + c.t)));
+    chk.disabled = seq.length !== cards.length;
+  };
+  const shuffledCards = shuffle(cards);
+  const chk = h("button", { class: "btn alt" }, "✔ Periksa urutan");
+  chk.onclick = () => {
+    tries++;
+    const wrong = seq.map((c, i) => c !== cards[i]);
+    $$(".slot", slots).forEach((s, i) => s.classList.add(wrong[i] ? "wrong" : "good"));
+    if (wrong.some(Boolean)) { SND.bad(); fb(`Ada ${wrong.filter(Boolean).length} kartu yang posisinya belum tepat (kotak merah). Pikirkan: apa yang menjadi <b>sebab</b>, dan apa <b>akibatnya</b>?`, "bad", 6500); setTimeout(() => { seq = seq.filter((c, i) => !wrong[i] && seq.slice(0, i).every((x, j) => !wrong[j])); draw(); }, 1300); }
+    else { SND.ok(); fb(why, "ok", 8000); setTimeout(() => onDone(Math.max(40, 100 - (tries - 1) * 20)), 1500); }
+  };
+  st.append(slots, pool, h("div", { class: "row c" }, chk));
+  draw();
+}
+/* ===================== DUNIA 1: ENERGI ===================== */
+const EN = { panas: ["🔥", "Panas"], cahaya: ["💡", "Cahaya"], bunyi: ["🔊", "Bunyi"], gerak: ["🌀", "Gerak"], listrik: ["⚡", "Listrik"], kimia: ["🧪", "Kimia"] };
+const enTag = k => `${EN[k][0]} ${EN[k][1]}`;
+L({ id: "1-1", world: "w1", em: "☀️", title: "Pemburu Sumber & Bentuk Energi", sub: "Matahari, air, angin, makanan, listrik",
+  tp: "menjelaskan apa itu energi, menyebutkan sumber energi, dan mengelompokkan benda berdasarkan bentuk energinya.", ref: "Pertemuan 1 (Sumber Energi) & Pertemuan 2 (Bentuk Energi)",
+  run: api => {
+    sorter(api, [
+      { prompt: "Energi adalah kemampuan untuk melakukan kegiatan atau membuat sesuatu bergerak dan berubah. Dari sumber energi mana asalnya?",
+        bins: [{ id: "mat", t: "Matahari", e: "☀️" }, { id: "air", t: "Air", e: "💧" }, { id: "ang", t: "Angin", e: "🌬️" }, { id: "mak", t: "Makanan", e: "🍚" }, { id: "lis", t: "Listrik", e: "🔌" }],
+        items: [
+          { t: "Jemuran menjadi kering", e: "👕", bin: "mat", why: "Panas matahari mengeringkan jemuran." },
+          { t: "Tumbuhan tumbuh subur", e: "🌱", bin: "mat", why: "Cahaya matahari membuat tumbuhan tumbuh. Matahari = sumber energi terbesar bagi bumi." },
+          { t: "Kincir air berputar", e: "🎡", bin: "air", why: "Air yang mengalir memutar kincir air." },
+          { t: "PLTA Cirata & Saguling", e: "🏞️", bin: "air", why: "Air bendungan di Jawa Barat dipakai untuk membuat listrik." },
+          { t: "Layang-layang terbang", e: "🪁", bin: "ang", why: "Angin menerbangkan layang-layang." },
+          { t: "Perahu layar melaju", e: "⛵", bin: "ang", why: "Angin mendorong layar perahu." },
+          { t: "Kuat belajar & bermain", e: "🏃", bin: "mak", why: "Makanan memberi energi untuk tubuh kita." },
+          { t: "Lampu & kipas di rumah", e: "💡", bin: "lis", why: "Listrik dari stopkontak menyalakan lampu dan kipas." }
+        ] },
+      { prompt: "Energi punya banyak bentuk. Masukkan setiap benda ke bentuk energinya.",
+        bins: ["panas", "cahaya", "bunyi", "gerak", "listrik"].map(k => ({ id: k, t: "Energi " + EN[k][1].toLowerCase(), e: EN[k][0] })),
+        items: [
+          { t: "Setrika", e: "👔", bin: "panas", why: "Setrika membuat pakaian menjadi panas." },
+          { t: "Api kompor", e: "🍳", bin: "panas", why: "Api kompor memberi panas untuk memasak." },
+          { t: "Senter", e: "🔦", bin: "cahaya", why: "Senter memberi cahaya sehingga kita bisa melihat." },
+          { t: "Bel kuttab", e: "🔔", bin: "bunyi", why: "Bel menghasilkan bunyi yang bisa kita dengar. Bunyi berasal dari getaran." },
+          { t: "Suara azan dari pengeras suara", e: "📢", bin: "bunyi", why: "Energi bunyi." },
+          { t: "Sepeda yang dikayuh", e: "🚲", bin: "gerak", why: "Benda yang bergerak memiliki energi gerak." },
+          { t: "Bola menggelinding", e: "⚽", bin: "gerak", why: "Bola yang bergerak memiliki energi gerak." },
+          { t: "Stopkontak", e: "🔌", bin: "listrik", why: "Energi listrik mengalir melalui kabel dari stopkontak." }
+        ] }
+    ], "", sc1 => {
+      // Babak 3: satu benda, dua bentuk energi (pilih banyak)
+      const items = shuffle([
+        { t: "Lampu menyala", e: "💡", ans: ["cahaya", "panas"], why: "Lampu memberi cahaya, tetapi juga terasa hangat bila disentuh." },
+        { t: "Televisi", e: "📺", ans: ["cahaya", "bunyi"], why: "Layar TV mengeluarkan cahaya, pengeras suaranya mengeluarkan bunyi." },
+        { t: "Matahari", e: "☀️", ans: ["cahaya", "panas"], why: "Matahari memberi cahaya dan panas sekaligus." },
+        { t: "Kompor gas menyala", e: "🔥", ans: ["panas", "cahaya"], why: "Api kompor memberi panas dan cahaya." }
+      ]);
+      let i = 0, ok1 = 0; const st = api.stage;
+      const one = () => {
+        api.prog(.66 + .34 * i / items.length);
+        if (i >= items.length) return api.finish(sc1 * .6 + ok1 / items.length * 40, "Sumber energi: matahari, air, angin, makanan, listrik. Bentuk energi: panas, cahaya, bunyi, gerak, listrik. Ada benda yang menghasilkan lebih dari satu bentuk energi. Bersyukurlah dengan memakai energi seperlunya.");
+        const it = items[i], pick = new Set(); let tries = 0;
+        st.innerHTML = "";
+        st.append(h("div", { class: "prompt" }, `Babak 3/3 · Satu benda, DUA bentuk energi! (${i + 1}/${items.length})`),
+          h("div", { class: "card center", style: "font-size:4rem;max-width:340px;margin:0 auto" }, it.e, h("div", { style: "font-size:1.2rem;font-weight:800" }, it.t)),
+          h("p", { class: "center" }, "Pilih DUA bentuk energi yang dihasilkan, lalu tekan Periksa."));
+        const o = h("div", { class: "opts", style: "justify-content:center" });
+        ["panas", "cahaya", "bunyi", "gerak", "listrik"].forEach(k => { const b = h("button", { class: "opt" }, enTag(k)); b.onclick = () => { pick.has(k) ? (pick.delete(k), b.classList.remove("ok")) : pick.size < 2 && (pick.add(k), b.classList.add("ok")); SND.click(); }; o.append(b); });
+        const chk = h("button", { class: "btn alt" }, "✔ Periksa");
+        chk.onclick = () => {
+          if (pick.size < 2) { fb("Pilih dua bentuk energi, ya.", "info", 2500); return; }
+          tries++;
+          if (it.ans.every(a => pick.has(a))) { if (tries === 1) ok1++; SND.ok(); fb(it.why, "ok", 5000); chk.disabled = true; setTimeout(() => { i++; one(); }, 1700); }
+          else { SND.bad(); fb("Belum tepat. Coba bayangkan: apa yang kamu lihat, dengar, atau rasakan dari benda ini?", "bad"); }
+        };
+        st.append(o, h("div", { class: "row c", style: "margin-top:10px" }, chk));
+      };
+      one();
+    }, 0, .66);
+  } });
+
+L({ id: "1-2", world: "w1", em: "🔦", title: "Lab Perubahan Energi", sub: "Rantai: kimia → listrik → cahaya",
+  tp: "menjelaskan bahwa energi dapat berubah bentuk dan menunjukkan perubahan energi pada alat sehari-hari.", ref: "Pertemuan 3 (Perubahan Energi)",
+  run: api => {
+    const DEV = shuffle([
+      { t: "Senter", e: "🔦", on: "🔦💡✨", ch: ["kimia", "listrik", "cahaya"], why: "Energi kimia di baterai → energi listrik → energi cahaya." },
+      { t: "Kipas baterai", e: "🪭", on: "🪭🌀💨", ch: ["kimia", "listrik", "gerak"], why: "Energi kimia di baterai → energi listrik → energi gerak (baling-baling berputar)." },
+      { t: "Setrika", e: "👔", on: "👔🔥", ch: ["listrik", "panas"], why: "Energi listrik → energi panas." },
+      { t: "Radio", e: "📻", on: "📻🎶", ch: ["listrik", "bunyi"], why: "Energi listrik → energi bunyi." },
+      { t: "Kompor gas", e: "🍳", on: "🍳🔥", ch: ["kimia", "panas"], alt: ["kimia", "cahaya"], why: "Energi kimia di gas → energi panas (dan cahaya dari nyala apinya)." },
+      { t: "Tubuh kita saat bermain", e: "🧒", on: "🧒🏃⚽", ch: ["kimia", "gerak"], why: "Energi kimia dari makanan → energi gerak saat kita berjalan dan bermain." }
+    ]);
+    let i = 0, first = 0; const st = api.stage;
+    const one = () => {
+      api.prog(i / DEV.length);
+      if (i >= DEV.length) return api.finish(first / DEV.length * 100, "Energi tidak hilang begitu saja; energi <b>berubah bentuk</b>. Energi kimia tersimpan di baterai, gas, dan makanan, lalu berubah menjadi listrik, cahaya, panas, bunyi, atau gerak. Lampu LED lebih hemat karena lebih banyak listriknya berubah menjadi cahaya.");
+      const d = DEV[i]; let seq = [], tries = 0;
+      st.innerHTML = "";
+      st.append(h("div", { class: "prompt" }, `Alat ${i + 1}/${DEV.length}: susun rantai perubahan energi pada ${d.t}.`));
+      const dev = h("div", { class: "card center", style: "font-size:4rem;max-width:360px;margin:0 auto 8px;transition:all .3s" }, d.e);
+      const slots = h("div", { class: "slots" });
+      const pal = h("div", { class: "opts", style: "justify-content:center" });
+      const draw = () => {
+        slots.innerHTML = "";
+        d.ch.forEach((_, j) => { const k = seq[j]; const s = h("div", { class: "slot" }, h("div", { class: "cap" }, j === 0 ? "Awal" : j === d.ch.length - 1 ? "Akhir" : "Lalu"), k ? h("div", { style: "font-size:1.8rem" }, EN[k][0]) : null, k ? h("b", {}, EN[k][1]) : h("span", { class: "muted small" }, "…")); if (k) s.onclick = () => { seq = seq.slice(0, j); SND.click(); draw(); }; slots.append(s); if (j < d.ch.length - 1) slots.append(h("span", { class: "arrow" }, "→")); });
+        chk.disabled = seq.length !== d.ch.length;
+      };
+      Object.keys(EN).forEach(k => pal.append(h("button", { class: "opt", onclick: () => { if (seq.length < d.ch.length) { seq.push(k); SND.pick(); draw(); } } }, enTag(k))));
+      const chk = h("button", { class: "btn alt" }, "⚡ Nyalakan!");
+      chk.onclick = () => {
+        tries++;
+        const okc = seq.join() === d.ch.join() || (d.alt && seq.join() === d.alt.join());
+        if (okc) { if (tries === 1) first++; api.score(first / DEV.length * 100); SND.ok(); dev.textContent = d.on; dev.style.background = "color-mix(in srgb,var(--gold) 35%,var(--card))"; fb("Berhasil! " + d.why, "ok", 6000); chk.disabled = true; setTimeout(() => { i++; one(); }, 2000); }
+        else { SND.bad(); $$(".slot", slots).forEach((s, j) => s.classList.add(seq[j] === d.ch[j] ? "good" : "wrong")); fb(`Alat belum menyala. ${d.ch[0] === "kimia" ? "Petunjuk: energi awalnya tersimpan di dalam baterai/gas/makanan." : "Petunjuk: alat ini dicolokkan ke stopkontak."}`, "bad", 6000); setTimeout(() => { seq = []; draw(); }, 1200); }
+      };
+      st.append(dev, h("p", { class: "center small muted" }, "Ketuk bentuk energi sesuai urutan. Ketuk kotak untuk menghapus."), slots, pal, h("div", { class: "row c", style: "margin-top:10px" }, chk));
+      draw();
+    };
+    one();
+  } });
+
+L({ id: "1-3", world: "w1", em: "🎐", title: "Lab Kincir Angin", sub: "Eksperimen: angin → gerak → listrik",
+  tp: "membuat kincir dan mengamati perubahan energinya.", ref: "Pertemuan 4 (Kincir Angin & Evaluasi Bab 1)",
+  run: api => {
+    const st = api.stage; let wind = 0, ori = 90, ang = 0, raf = null, last = 0, pts = 0, stage = 0, seen = { lo: false, hi: false };
+    api.onStop(() => cancelAnimationFrame(raf));
+    st.innerHTML = "";
+    st.append(h("div", { class: "prompt" }, "Kincir ini tersambung ke generator kecil dan sebuah lampu. Atur angin dan arah kincir, lalu amati!"));
+    const two = h("div", { class: "two" });
+    const sc = h("div", { class: "scene", style: "background:linear-gradient(#bfe6ff,#f0faff)" });
+    sc.innerHTML = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kincir angin dan lampu">
+      <style>.wl{stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-dasharray:30 40;animation:wf 1s linear infinite}@keyframes wf{to{stroke-dashoffset:-70}}</style>
+      <rect y="320" width="600" height="60" fill="#7cc35a"/>
+      <g id="wl" opacity="0">${[90, 150, 210].map(y => `<line class="wl" x1="0" y1="${y}" x2="230" y2="${y}"/>`).join("")}</g>
+      <rect x="296" y="180" width="10" height="145" fill="#8a6a4a"/>
+      <g id="hub" transform="translate(300 170)"><g id="wheel" transform="scale(1 1)"><g id="rot">
+        <path d="M0 0 L0 -90 Q40 -60 0 0Z" fill="#ff8a3d"/><path d="M0 0 L90 0 Q60 40 0 0Z" fill="#3aa0e8"/><path d="M0 0 L0 90 Q-40 60 0 0Z" fill="#1fa35b"/><path d="M0 0 L-90 0 Q-60 -40 0 0Z" fill="#8a5cf6"/>
+        <circle r="9" fill="#fff" stroke="#555" stroke-width="3"/></g></g></g>
+      <rect x="270" y="300" width="60" height="30" rx="6" fill="#555"/><text x="300" y="320" font-size="11" fill="#fff" text-anchor="middle">generator</text>
+      <path d="M330 315 C380 315 400 260 460 260" fill="none" stroke="#333" stroke-width="3"/>
+      <circle id="glow" cx="480" cy="230" r="10" fill="#ffe066" opacity="0"/>
+      <text x="480" y="250" font-size="54" text-anchor="middle">💡</text>
+      <text x="480" y="300" font-size="13" text-anchor="middle" fill="#234" id="lt">lampu mati</text>
+      <text x="115" y="60" font-size="14" font-weight="700" text-anchor="middle" fill="#234">arah angin →</text>
+    </svg>`;
+    const side = h("div", { class: "card" });
+    two.append(sc, side); st.append(two);
+    const WN = ["Tidak ada angin", "Angin sepoi-sepoi", "Angin pelan", "Angin sedang", "Angin kencang", "Angin sangat kencang"];
+    const wl = h("b"), sl = h("input", { type: "range", min: 0, max: 5, value: 0, style: "width:100%", "aria-label": "Kekuatan angin" });
+    const oriBox = h("div", { class: "opts" });
+    const mission = h("div", { class: "goal" }), qa = h("div");
+    side.append(mission, h("p", { style: "margin:4px 0" }, "🌬️ Kekuatan angin: ", wl), sl, h("p", { style: "margin:8px 0 4px" }, h("b", {}, "🧭 Arah kincir:")), oriBox, h("div", { id: "kpi", class: "kpi", style: "margin-top:8px" }), qa);
+    const eff = () => wind * Math.cos(ori * Math.PI / 180);
+    const drawOri = () => { oriBox.innerHTML = ""; [[0, "Menghadap angin"], [45, "Serong"], [90, "Menyamping (sejajar angin)"]].forEach(([a, t]) => oriBox.append(h("button", { class: "opt" + (ori === a ? " ok" : ""), onclick: () => { ori = a; SND.click(); drawOri(); upd(); } }, t))); };
+    function upd() {
+      wl.textContent = WN[wind];
+      $("#wl", sc).setAttribute("opacity", wind ? Math.min(1, .25 + wind * .15) : 0);
+      $("#wheel", sc).setAttribute("transform", `scale(${Math.max(.15, Math.cos(ori * Math.PI / 180)).toFixed(2)} 1)`);
+      const e = eff(), lamp = e >= 2.4 ? Math.min(1, (e - 2) / 3) : 0;
+      $("#glow", sc).setAttribute("opacity", lamp); $("#glow", sc).setAttribute("r", 10 + lamp * 40);
+      $("#lt", sc).textContent = lamp ? (lamp > .6 ? "lampu terang!" : "lampu menyala redup") : "lampu mati";
+      $("#kpi").innerHTML = `<span class="pill">🔄 Putaran: ${e < .3 ? "diam" : e < 1.5 ? "pelan" : e < 3 ? "sedang" : "cepat"}</span><span class="pill">💡 ${lamp ? "menyala" : "mati"}</span>`;
+      if (wind <= 1 && e > .3) seen.lo = true; if (wind >= 4 && ori === 0) seen.hi = true;
+      check(lamp);
+    }
+    const loop = t => { const dt = last ? (t - last) / 1000 : 0; last = t; ang = (ang + eff() * 110 * dt) % 360; $("#rot", sc).setAttribute("transform", `rotate(${ang.toFixed(1)})`); raf = requestAnimationFrame(loop); };
+    raf = requestAnimationFrame(loop);
+    sl.oninput = () => { wind = +sl.value; if (wind) SND.wind(); upd(); };
+    function ask(q, opts, why, next) {
+      qa.innerHTML = ""; let wrong = false;
+      const o = h("div", { class: "opts" });
+      opts.forEach(([t, ok]) => { const b = h("button", { class: "opt" }, t); b.onclick = () => { if (ok) { if (!wrong) pts++; api.score(pts / 4 * 100); b.classList.add("ok"); SND.ok(); fb(why, "ok", 6000); $$("button", o).forEach(x => x.disabled = true); setTimeout(next, 1500); } else { wrong = true; b.classList.add("no"); b.disabled = true; SND.bad(); fb("Belum tepat. Amati lagi kincirnya, ya.", "bad"); } }; o.append(b); });
+      qa.append(h("p", { class: "prompt" }, q), o);
+    }
+    function setMission() {
+      api.prog(stage / 4);
+      if (stage === 0) { mission.innerHTML = "🎯 <b>Misi 1 · Prediksi dulu!</b>"; ask("Jika angin makin kencang, kincir akan berputar…", [["Makin cepat", 1], ["Makin lambat", 0], ["Sama saja", 0]], "Prediksimu tepat! Sekarang buktikan sendiri.", () => { stage = 1; ori = 0; drawOri(); upd(); setMission(); }); }
+      else if (stage === 1) { mission.innerHTML = "🎯 <b>Misi 1 · Buktikan:</b> coba angin <b>sepoi-sepoi</b> lalu <b>kencang</b> (kincir menghadap angin). Amati putarannya."; qa.innerHTML = ""; }
+      else if (stage === 2) { mission.innerHTML = "🎯 <b>Misi 2:</b> anginnya hanya <b>sedang</b>. Nyalakan lampu tanpa menambah angin! (Petunjuk: perhatikan arah kincir.)"; qa.innerHTML = ""; }
+      else if (stage === 3) { mission.innerHTML = "🎯 <b>Misi 3:</b> jawab pertanyaan."; ask("Perubahan energi pada kincir angin yang menyalakan lampu adalah…", [["Angin (gerak) → kincir berputar (gerak) → listrik → cahaya", 1], ["Cahaya → listrik → angin", 0], ["Listrik → angin → cahaya", 0]], "Benar! Angin mendorong baling-baling sehingga berputar; putaran itu memutar generator yang membuat listrik; listrik menyalakan lampu. Kincir angin raksasa di Sidrap, Sulawesi Selatan, bekerja dengan cara yang sama.", () => { stage = 4; api.finish(pts / 4 * 100, "Energi angin (energi gerak udara) dapat diubah menjadi energi gerak kincir, lalu menjadi energi listrik oleh generator, lalu menjadi cahaya pada lampu. Kincir berputar paling cepat bila menghadap arah angin dan anginnya kencang."); }); }
+    }
+    function check(lamp) {
+      if (stage === 1 && seen.lo && seen.hi) { stage = 2; pts++; api.score(pts / 4 * 100); SND.ok(); fb("Terbukti! Angin sepoi-sepoi membuat kincir berputar pelan; angin kencang membuatnya berputar cepat — bahkan lampu menyala.", "ok", 6500); wind = 3; sl.value = 3; sl.disabled = true; ori = 90; drawOri(); setTimeout(() => { setMission(); upd(); }, 10); }
+      else if (stage === 2 && lamp) { stage = 3; pts++; api.score(pts / 4 * 100); SND.ok(); fb("Lampu menyala! Kincir yang menghadap arah angin menangkap dorongan angin paling banyak. Kincir yang sejajar angin hampir tidak berputar.", "ok", 7000); setTimeout(setMission, 10); }
+    }
+    drawOri(); upd(); setMission();
+  } });
+/* ===================== DUNIA 2: GAYA ===================== */
+L({ id: "2-1", world: "w2", em: "💪", title: "Arena Jenis & Pengaruh Gaya", sub: "Otot, gesek, magnet, gravitasi, pegas",
+  tp: "menyebutkan 5 jenis gaya dan menjelaskan pengaruh gaya terhadap gerak dan bentuk benda.", ref: "Pertemuan 5 (Jenis Gaya) & Pertemuan 8 (Pengaruh Gaya)",
+  run: api => sorter(api, [
+    { prompt: "Gaya adalah dorongan atau tarikan. Gaya apa yang bekerja pada setiap kegiatan?",
+      bins: [{ id: "oto", t: "Gaya otot", e: "💪" }, { id: "ges", t: "Gaya gesek", e: "🛑" }, { id: "mag", t: "Gaya magnet", e: "🧲" }, { id: "gra", t: "Gaya gravitasi", e: "🍎" }, { id: "peg", t: "Gaya pegas", e: "🌀" }],
+      items: [
+        { t: "Mengangkat ember", e: "🪣", bin: "oto", why: "Tenaga dari otot tubuh kita." }, { t: "Menggeser kursi", e: "🪑", bin: "oto", why: "Mendorong dengan tenaga otot." },
+        { t: "Rem sepeda", e: "🚲", bin: "ges", why: "Karet rem bergesekan dengan roda sehingga sepeda melambat." }, { t: "Sandal yang tidak licin", e: "🩴", bin: "ges", why: "Gesekan sol sandal dengan lantai membuat kita tidak tergelincir." },
+        { t: "Magnet menarik paku", e: "📌", bin: "mag", why: "Magnet menarik benda dari besi atau baja." },
+        { t: "Buah kelapa jatuh", e: "🥥", bin: "gra", why: "Bumi menarik semua benda ke bawah." }, { t: "Hujan turun ke bumi", e: "🌧️", bin: "gra", why: "Gaya tarik bumi." },
+        { t: "Per kasur", e: "🛏️", bin: "peg", why: "Benda lentur kembali ke bentuk semula." }, { t: "Per pulpen tekan", e: "🖊️", bin: "peg", why: "Per mendorong kembali isi pulpen." }
+      ] },
+    { prompt: "Gaya tidak terlihat, tetapi pengaruhnya bisa diamati. Apa pengaruh gaya pada kejadian ini?",
+      bins: [{ id: "ger", t: "Diam → bergerak", e: "▶️" }, { id: "cep", t: "Mempercepat", e: "⏩" }, { id: "lam", t: "Memperlambat / menghentikan", e: "⏹️" }, { id: "arh", t: "Mengubah arah", e: "↩️" }, { id: "btk", t: "Mengubah bentuk", e: "🫓" }],
+      items: [
+        { t: "Bola diam ditendang", e: "⚽", bin: "ger", why: "Bola yang diam bergerak setelah didorong/ditendang." },
+        { t: "Ayunan didorong lebih kuat", e: "🎠", bin: "cep", why: "Ayunan berayun lebih cepat." },
+        { t: "Sepeda direm", e: "🚲", bin: "lam", why: "Sepeda melambat lalu berhenti." },
+        { t: "Bola memantul dari dinding", e: "🧱", bin: "arh", why: "Bola berbelok ke arah lain." },
+        { t: "Plastisin ditekan", e: "🟠", bin: "btk", why: "Plastisin menjadi pipih." },
+        { t: "Karet gelang ditarik", e: "➰", bin: "btk", why: "Karet gelang menjadi panjang." }
+      ] },
+    { prompt: "Setelah gaya dilepas: kembali ke bentuk semula (lentur/elastis) atau tetap berubah?",
+      bins: [{ id: "el", t: "Kembali semula (elastis)", e: "🔁" }, { id: "tt", t: "Tetap berubah", e: "📌" }],
+      items: [
+        { t: "Karet gelang", e: "➰", bin: "el", why: "Karet gelang kembali ke bentuk semula." }, { t: "Per", e: "🌀", bin: "el", why: "Per kembali ke bentuk semula." },
+        { t: "Bola karet ditekan", e: "🔴", bin: "el", why: "Bola karet kembali bulat." },
+        { t: "Plastisin", e: "🟠", bin: "tt", why: "Plastisin tetap pipih." }, { t: "Kaleng penyok", e: "🥫", bin: "tt", why: "Kaleng tetap penyok." }, { t: "Kertas diremas", e: "📄", bin: "tt", why: "Kertas tetap kusut." }
+      ] }
+  ], "Gaya = dorongan atau tarikan. Jenisnya: otot, gesek, magnet, gravitasi, pegas. Gaya dapat menggerakkan, mempercepat, memperlambat/menghentikan, mengubah arah, dan mengubah bentuk benda. Satuan gaya adalah newton.") });
+
+/* ---- Lab Luncur: perlambatan oleh gaya gesek  d = v0² / (2·μ·g) ----
+   μ adalah nilai perkiraan untuk permainan (kisaran tabel OpenStax: 0,03–0,7). */
+const SURF = [
+  { id: "es", t: "Es licin", e: "🧊", mu: .05, col: "#cfeeff" },
+  { id: "ker", t: "Lantai keramik", e: "⬜", mu: .2, col: "#eef0f2" },
+  { id: "kay", t: "Lantai kayu", e: "🪵", mu: .3, col: "#e0b98a" },
+  { id: "kar", t: "Karpet", e: "🟥", mu: .5, col: "#d9706b" },
+  { id: "pas", t: "Semen kasar", e: "🪨", mu: .7, col: "#b5b0a6" }
+];
+const G = 9.8, TRACK = 5;
+const v0 = F => 0.6 + 0.4 * F;
+const dist = (F, mu) => v0(F) ** 2 / (2 * mu * G);
+L({ id: "2-2", world: "w2", em: "🛷", title: "Lab Luncur Gaya Gesek", sub: "Eksperimen permukaan kasar & halus",
+  tp: "menjelaskan gaya otot dan gaya gesek, serta manfaat dan kerugian gaya gesek.", ref: "Pertemuan 6 (Gaya Otot & Gaya Gesek)",
+  run: api => {
+    const st = api.stage; let pts = 0; const MAX = 2; let timer = null;
+    api.onStop(() => cancelAnimationFrame(timer));
+    function lane(s, label) {
+      const w = h("div", { class: "card", style: "padding:8px 10px;margin:6px 0" });
+      w.innerHTML = `<div class="row small"><b>${s.e} ${label || s.t}</b><span class="muted" data-r>0,00 m</span></div>
+      <div style="position:relative;height:46px;border-radius:10px;background:${s.col};border:2px solid var(--line);margin-top:4px;overflow:hidden" data-tr>
+        ${[1, 2, 3, 4].map(m => `<div style="position:absolute;left:${m / TRACK * 100}%;top:0;bottom:0;border-left:1px dashed rgba(0,0,0,.25);font-size:10px;color:#444;padding-left:2px">${m} m</div>`).join("")}
+        <div data-goal style="position:absolute;top:0;bottom:0;display:none;background:rgba(31,163,91,.35);border-left:3px solid #1fa35b;border-right:3px solid #1fa35b"></div>
+        <div data-b style="position:absolute;left:0;top:6px;font-size:28px;transform:translateX(-10%)">📦</div></div>`;
+      return w;
+    }
+    function animate(lanes, done) {
+      const t0 = performance.now();
+      const step = t => {
+        const tt = (t - t0) / 1000; let all = true;
+        lanes.forEach(L => {
+          const a = L.mu * G, tStop = L.v / a; const tc = Math.min(tt, tStop); let x = L.v * tc - .5 * a * tc * tc;
+          if (x >= TRACK) { x = TRACK; } else if (tt < tStop) all = false;
+          L.x = x; $("[data-b]", L.el).style.left = `calc(${x / TRACK * 100}% - ${x / TRACK * 34}px)`; $("[data-r]", L.el).textContent = fmt(x, 2) + " m" + (x >= TRACK ? " (menabrak ujung!)" : "");
+        });
+        if (all) { done(lanes); return; }
+        timer = requestAnimationFrame(step);
+      };
+      timer = requestAnimationFrame(step);
+    }
+    function m1() {
+      api.prog(0);
+      st.innerHTML = ""; st.append(h("div", { class: "prompt" }, "Misi 1 · Kotak yang sama didorong dengan kekuatan yang sama di tiga lantai berbeda."));
+      const pick = [SURF[0], SURF[2], SURF[3]];
+      const lanes = pick.map(s => ({ s, mu: s.mu, v: v0(3), el: lane(s) }));
+      lanes.forEach(L => st.append(L.el));
+      const qa = h("div", { class: "card" }, h("p", { class: "prompt" }, "🤔 Prediksi: di lantai mana kotak meluncur PALING JAUH?"));
+      const o = h("div", { class: "opts" }); let pred = null;
+      pick.forEach(s => o.append(h("button", { class: "opt", onclick: e => { pred = s.id; $$("button", o).forEach(b => b.classList.remove("ok")); e.currentTarget.classList.add("ok"); go.disabled = false; SND.click(); } }, s.e + " " + s.t)));
+      const go = h("button", { class: "btn", disabled: true }, "👉 Dorong!");
+      go.onclick = () => { go.disabled = true; $$("button", o).forEach(b => b.disabled = true); SND.wind(); animate(lanes, () => {
+        const ok = pred === "es"; if (ok) pts++; api.score(pts / MAX * 100); (ok ? SND.ok : SND.bad)();
+        qa.append(h("div", { class: "goal", html: `${ok ? "🎯 Prediksimu tepat!" : "🔁 Hasilnya berbeda dari prediksimu."} Di es licin kotak meluncur paling jauh, di karpet paling dekat. <b>Permukaan halus → gesekan kecil; permukaan kasar → gesekan besar.</b> Gaya gesek selalu melawan arah gerak, sehingga kotak lama-lama berhenti.` }), h("button", { class: "btn alt", onclick: m2 }, "Misi 2 ➜"));
+      }); };
+      qa.append(o, h("div", { class: "row", style: "margin-top:8px" }, go)); st.append(qa);
+    }
+    function m2() {
+      api.prog(.35);
+      const G1 = 1.6, G2 = 2.2; let tries = 0, F = 3, sf = SURF[2];
+      st.innerHTML = ""; st.append(h("div", { class: "prompt" }, `Misi 2 · Kirim paket ke rak! Atur kekuatan dorongan dan pilih lantai agar kotak berhenti di zona hijau (${fmt(G1)}–${fmt(G2)} m).`));
+      const ln = { s: sf, mu: sf.mu, v: v0(F), el: lane(sf, "Lintasan") };
+      const gz = $("[data-goal]", ln.el); gz.style.display = "block"; gz.style.left = G1 / TRACK * 100 + "%"; gz.style.width = (G2 - G1) / TRACK * 100 + "%";
+      const ctl = h("div", { class: "card" });
+      const fl = h("b", {}, "3"), sl = h("input", { type: "range", min: 1, max: 5, step: .5, value: 3, style: "width:100%", "aria-label": "Kekuatan dorongan" });
+      sl.oninput = () => { F = +sl.value; fl.textContent = fmt(F); SND.tick(); };
+      const so = h("div", { class: "opts" });
+      const drawS = () => { so.innerHTML = ""; SURF.forEach(s => so.append(h("button", { class: "opt" + (s === sf ? " ok" : ""), onclick: () => { sf = s; ln.mu = s.mu; $("[data-tr]", ln.el).style.background = s.col; SND.click(); drawS(); } }, s.e + " " + s.t))); };
+      const go = h("button", { class: "btn" }, "👉 Dorong!");
+      go.onclick = () => {
+        go.disabled = true; tries++; ln.v = v0(F); $("[data-b]", ln.el).style.left = "0"; SND.wind();
+        animate([ln], () => {
+          go.disabled = false;
+          if (ln.x >= G1 && ln.x <= G2) { const add = tries <= 2 ? 1 : .5; pts += add; api.score(pts / MAX * 100); SND.ok(); fb(`Tepat sasaran! Kotak berhenti di ${fmt(ln.x, 2)} m dengan ${sf.t.toLowerCase()} dan dorongan ${fmt(F)}.`, "ok", 6000); go.remove(); ctl.append(h("button", { class: "btn alt", onclick: m3 }, "Misi 3 ➜")); }
+          else { SND.bad(); fb(ln.x < G1 ? `Kotak berhenti terlalu dekat (${fmt(ln.x, 2)} m). Dorong lebih kuat atau pilih lantai yang lebih licin.` : `Kotak terlalu jauh (${fmt(Math.min(ln.x, TRACK), 2)} m). Dorong lebih pelan atau pilih lantai yang lebih kasar.`, "bad", 6000); }
+        });
+      };
+      ctl.append(h("p", { style: "margin:2px 0" }, "💪 Kekuatan dorongan (gaya otot): ", fl), sl, h("p", { style: "margin:8px 0 4px" }, h("b", {}, "Lantai:")), so, h("div", { class: "row", style: "margin-top:8px" }, go));
+      st.append(ln.el, ctl); drawS();
+    }
+    function m3() {
+      st.innerHTML = "";
+      sorter(api, [{ prompt: "Misi 3 · Gaya gesek ada manfaatnya, ada juga kerugiannya. Pilah!",
+        bins: [{ id: "man", t: "Manfaat gaya gesek", e: "👍" }, { id: "rug", t: "Kerugian gaya gesek", e: "👎" }],
+        items: [
+          { t: "Sandal bergerigi tidak tergelincir", e: "🩴", bin: "man", why: "Gesekan membuat kaki mencengkeram lantai." },
+          { t: "Rem menghentikan sepeda", e: "🚲", bin: "man", why: "Gesekan rem memperlambat roda." },
+          { t: "Pensil meninggalkan tulisan", e: "✏️", bin: "man", why: "Gesekan ujung pensil dengan kertas." },
+          { t: "Ban sepeda menipis (aus)", e: "🛞", bin: "rug", why: "Gesekan terus-menerus mengikis ban." },
+          { t: "Lemari berat sulit didorong", e: "🗄️", bin: "rug", why: "Gesekan besar melawan dorongan. Pakai roda untuk menguranginya!" },
+          { t: "Engsel pintu berderit", e: "🚪", bin: "rug", why: "Gesekan membuat engsel berderit; beri minyak pelumas." }
+        ] }], "", sc => api.finish(pts / MAX * 70 + sc * .3, "Gaya otot berasal dari otot tubuh (butuh energi dari makanan halal dan bergizi). Gaya gesek terjadi saat dua permukaan bergesekan dan selalu melawan arah gerak: besar pada permukaan kasar, kecil pada permukaan halus. Roda dan minyak pelumas mengurangi gesekan."), .7, .3);
+    }
+    m1();
+  } });
+
+const MAGOBJ = [
+  { t: "Paku", e: "📌", m: true }, { t: "Peniti", e: "🧷", m: true }, { t: "Klip kertas", e: "📎", m: true }, { t: "Jarum", e: "🪡", m: true },
+  { t: "Pensil kayu", e: "✏️", m: false }, { t: "Penggaris plastik", e: "📏", m: false }, { t: "Kertas", e: "📄", m: false }, { t: "Karet gelang", e: "➰", m: false }, { t: "Kain", e: "🧣", m: false }, { t: "Kelereng kaca", e: "🔮", m: false }
+];
+L({ id: "2-3", world: "w2", em: "🧲", title: "Lab Magnet & Gravitasi", sub: "Uji benda, kutub magnet, melompat di Bulan",
+  tp: "menjelaskan gaya magnet, benda magnetis, kutub magnet, dan gaya gravitasi.", ref: "Pertemuan 7 (Magnet & Gravitasi)",
+  run: api => {
+    const st = api.stage; let pA = 0, pB = 0, pC = 0;
+    function partA() {
+      api.prog(0);
+      st.innerHTML = "";
+      st.append(h("div", { class: "prompt" }, "Bagian A · Prediksi dulu: benda mana yang akan ditarik magnet? Letakkan semua kartu, lalu uji dengan magnet."));
+      const tray = h("div", { class: "tray" });
+      const objs = shuffle(MAGOBJ).slice(0, 8);
+      if (!objs.some(o => o.m)) objs[0] = MAGOBJ[0];
+      objs.forEach(o => tray.append(chip({ t: o.t, e: o.e, o })));
+      const bins = h("div", { class: "bins" },
+        h("div", { class: "bin dz", "data-id": "y" }, h("h4", {}, h("span", { class: "e" }, "🧲"), "Akan ditarik magnet"), h("div", { class: "in" })),
+        h("div", { class: "bin dz", "data-id": "n" }, h("h4", {}, h("span", { class: "e" }, "🚫"), "Tidak ditarik magnet"), h("div", { class: "in" })));
+      const test = h("button", { class: "btn alt", disabled: true }, "🧲 Uji dengan magnet!");
+      DnD.onDrop = (c, z) => { $(".in", z).append(c); c.classList.remove("sel"); SND.pick(); test.disabled = $$(".chip", tray).length > 0; };
+      tray.addEventListener("click", e => { if (DnD.sel && !e.target.closest(".chip")) { const c = DnD.sel; DnD.clear(); tray.append(c); test.disabled = true; } });
+      test.onclick = async () => {
+        test.disabled = true; DnD.onDrop = null;
+        let ok = 0;
+        for (const z of $$(".bin", bins)) for (const c of $$(".chip", z)) {
+          const o = c._it.o, pred = z.dataset.id === "y";
+          c.classList.add("pop"); await sleep(260);
+          c.innerHTML = `<span class="e">${o.e}</span>${o.t} ${o.m ? "🧲 menempel!" : "— tidak menempel"} ${pred === o.m ? "✅" : "❌"}`;
+          c.classList.add("done"); c.style.borderColor = pred === o.m ? "var(--ok)" : "var(--bad)";
+          if (pred === o.m) ok++; (o.m ? SND.pick : SND.click)();
+        }
+        pA = ok / objs.length; api.score(pA * 30);
+        st.append(h("div", { class: "goal", html: `Prediksimu benar ${ok} dari ${objs.length}. <b>Benda magnetis</b> terbuat dari besi atau baja (paku, peniti, klip, jarum). Kayu, plastik, kertas, karet, kain, dan kaca <b>tidak</b> ditarik magnet.` }),
+          h("button", { class: "btn alt", onclick: partB }, "Bagian B ➜"));
+      };
+      st.append(tray, bins, h("div", { class: "row c", style: "margin-top:8px" }, test));
+    }
+    function partB() {
+      api.prog(.35);
+      const P = shuffle([{ goal: "tarik", a: "SU" }, { goal: "tolak", a: "SU" }, { goal: "tarik", a: "US" }]);
+      let i = 0, first = 0;
+      const one = () => {
+        if (i >= P.length) { pB = first / P.length; api.score(pA * 30 + pB * 35); return partC(); }
+        const pz = P[i]; let b = "US", tries = 0;
+        st.innerHTML = "";
+        st.append(h("div", { class: "prompt" }, `Bagian B · Teka-teki kutub ${i + 1}/3: buat kedua magnet ${pz.goal === "tarik" ? "TARIK-MENARIK" : "TOLAK-MENOLAK"}!`),
+          h("p", { class: "small muted" }, "Magnet kiri tetap. Ketuk “Putar magnet kanan” untuk membalik kutubnya, lalu tekan “Dekatkan”."));
+        const box = h("div", { class: "card", style: "position:relative;height:130px;overflow:hidden" });
+        const mag = (s, id) => `<div id="${id}" style="position:absolute;top:40px;display:flex;border-radius:10px;overflow:hidden;font-weight:800;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.2);transition:left .5s cubic-bezier(.3,1.4,.5,1)">${s.split("").map(c => `<span style="width:62px;height:46px;display:grid;place-items:center;background:${c === "U" ? "#e04848" : "#3a6fe0"}">${c}</span>`).join("")}</div>`;
+        const draw = (bx) => { box.innerHTML = mag(pz.a, "ma") + mag(b, "mb"); $("#ma", box).style.left = "8%"; $("#mb", box).style.left = bx || "62%"; };
+        draw();
+        const rot = h("button", { class: "btn ghost" }, "🔄 Putar magnet kanan");
+        rot.onclick = () => { b = b.split("").reverse().join(""); SND.click(); draw(); };
+        const go = h("button", { class: "btn" }, "🤏 Dekatkan");
+        go.onclick = () => {
+          tries++; const facing = pz.a[1] + b[0]; const attract = facing[0] !== facing[1];
+          $("#mb", box).style.left = attract ? "calc(8% + 124px)" : "75%";
+          SND[attract ? "pick" : "bad"]();
+          const ok = (pz.goal === "tarik") === attract;
+          setTimeout(() => {
+            if (ok) { if (tries === 1) first++; SND.ok(); fb(`${attract ? "Tarik-menarik" : "Tolak-menolak"}! Kutub yang berhadapan: ${facing[0]} dan ${facing[1]}. ${attract ? "Kutub berbeda saling menarik." : "Kutub sejenis saling menolak."}`, "ok", 5000); rot.disabled = go.disabled = true; setTimeout(() => { i++; one(); }, 1700); }
+            else { fb(`Mereka ${attract ? "tarik-menarik" : "tolak-menolak"} karena kutub yang berhadapan ${facing[0]} dan ${facing[1]}. Coba putar magnet kanan!`, "bad", 5000); setTimeout(() => draw(), 900); }
+          }, 600);
+        };
+        st.append(box, h("div", { class: "row c" }, rot, go));
+      };
+      one();
+    }
+    function partC() {
+      api.prog(.7);
+      const v = 2.5, PL = { bumi: { t: "Bumi", e: "🌍", g: 9.8, bg: "#bfe6ff", gr: "#7cc35a" }, bulan: { t: "Bulan", e: "🌕", g: 1.62, bg: "#1b1d3a", gr: "#9a9aa6" } };
+      let where = "bumi", jumped = new Set(), raf = null;
+      st.innerHTML = "";
+      st.append(h("div", { class: "prompt" }, "Bagian C · Gaya gravitasi = tarikan bumi. Melompatlah dengan kekuatan yang SAMA di Bumi dan di Bulan, lalu bandingkan!"));
+      const sc = h("div", { class: "card", style: "position:relative;height:300px;overflow:hidden;padding:0" });
+      const kid = h("div", { style: "position:absolute;left:50%;bottom:40px;font-size:44px;transform:translateX(-50%)" }, "🧒");
+      const ground = h("div", { style: "position:absolute;left:0;right:0;bottom:0;height:40px" });
+      const scale = h("div", { style: "position:absolute;left:8px;top:0;bottom:40px;width:46px;font-size:11px;color:#fff;text-shadow:0 1px 2px #000" });
+      for (let m = 0; m <= 2; m += .5) scale.append(h("div", { style: `position:absolute;bottom:${m / 2.2 * 100}%;border-top:1px solid #fff;width:100%` }, fmt(m) + " m"));
+      const out = h("div", { class: "kpi", style: "margin:8px 0" });
+      sc.append(scale, ground, kid);
+      const paint = () => { const p = PL[where]; sc.style.background = p.bg; ground.style.background = p.gr; };
+      const so = h("div", { class: "opts" });
+      const drawS = () => { so.innerHTML = ""; Object.entries(PL).forEach(([k, p]) => so.append(h("button", { class: "opt" + (k === where ? " ok" : ""), onclick: () => { where = k; paint(); drawS(); SND.click(); } }, p.e + " " + p.t))); };
+      const res = {};
+      const jump = h("button", { class: "btn big" }, "🦘 Lompat!");
+      jump.onclick = () => {
+        jump.disabled = true; const g = PL[where].g, T = 2 * v / g, H = v * v / (2 * g); const t0 = performance.now(); SND.pick();
+        const step = t => { const tt = Math.min((t - t0) / 1000 * 1.6, T); const y = v * tt - .5 * g * tt * tt; kid.style.bottom = `calc(40px + ${y / 2.2 * (300 - 40 - 50)}px)`; if (tt < T) raf = requestAnimationFrame(step); else { jump.disabled = false; res[where] = H; jumped.add(where); out.innerHTML = Object.entries(res).map(([k, hh]) => `<span class="pill">${PL[k].e} ${PL[k].t}: ${fmt(hh, 2)} m</span>`).join(""); if (jumped.size === 2) askC(); } };
+        raf = requestAnimationFrame(step);
+      };
+      api.onStop(() => cancelAnimationFrame(raf));
+      let asked = false;
+      function askC() {
+        if (asked) return; asked = true;
+        const qa = h("div", { class: "card" }); st.append(qa);
+        const Q = [
+          { q: `Di Bulan kamu melompat sekitar ${fmt(res.bulan / res.bumi, 0)} kali lebih tinggi. Mengapa?`, o: [["Gaya gravitasi Bulan jauh lebih kecil (± seperenam Bumi)", 1], ["Di Bulan kita lebih kuat", 0], ["Bulan lebih dekat ke matahari", 0]], why: "Gravitasi Bulan kira-kira seperenam gravitasi Bumi, jadi tarikannya lebih lemah dan kita melompat lebih tinggi." },
+          { q: "Bola yang dilempar ke atas selalu turun kembali karena…", o: [["Gaya gravitasi bumi menariknya ke bawah", 1], ["Gaya magnet", 0], ["Gaya pegas", 0]], why: "Bumi menarik semua benda ke bawah. Karena gravitasi pula kita bisa berdiri dan berjalan tanpa melayang." }
+        ];
+        let k = 0, ok = 0;
+        const q1 = () => { qa.innerHTML = ""; let wrong = false; const Qk = Q[k]; const o = h("div", { class: "opts" });
+          Qk.o.forEach(([t, good]) => { const b = h("button", { class: "opt" }, t); b.onclick = () => { if (good) { if (!wrong) ok++; b.classList.add("ok"); SND.ok(); fb(Qk.why, "ok", 6000); $$("button", o).forEach(x => x.disabled = true); setTimeout(() => { k++; if (k < Q.length) q1(); else { pC = ok / Q.length; api.finish(pA * 30 + pB * 35 + pC * 35, "Magnet menarik benda dari besi dan baja. Kutub berbeda (U–S) tarik-menarik; kutub sejenis (U–U, S–S) tolak-menolak. Gravitasi adalah tarikan bumi yang membuat semua benda jatuh ke bawah; gravitasi Bulan sekitar seperenam gravitasi Bumi."); } }, 1600); } else { wrong = true; b.classList.add("no"); b.disabled = true; SND.bad(); } }; o.append(b); });
+          qa.append(h("p", { class: "prompt" }, Qk.q), o); qa.scrollIntoView({ behavior: "smooth", block: "center" }); };
+        q1();
+      }
+      st.append(h("div", { class: "row" }, so), sc, out, h("div", { class: "row c" }, jump));
+      paint(); drawS();
+    }
+    partA();
+  } });
+/* ===================== DUNIA 3: TEMPAT TINGGALKU ===================== */
+L({ id: "3-1", world: "w3", em: "⛰️", title: "Penjelajah Bentang Alam", sub: "Dataran, pegunungan, pesisir, sungai",
+  tp: "menceritakan kondisi geografis tempat tinggal dan membedakan lingkungan alami dan buatan.", ref: "Pertemuan 9 (Kondisi Geografis)",
+  run: api => sorter(api, [
+    { prompt: "Baca petunjuknya. Di bentuk muka bumi mana tempat itu berada?",
+      bins: [{ id: "dr", t: "Dataran rendah", e: "🏙️" }, { id: "dt", t: "Dataran tinggi & pegunungan", e: "🏔️" }, { id: "ps", t: "Pesisir (pantai)", e: "🏖️" }, { id: "sg", t: "Sungai", e: "🏞️" }],
+      items: [
+        { t: "Tanah datar, hawa panas, banyak sawah & kota", e: "🌾", bin: "dr", why: "Ciri dataran rendah." },
+        { t: "Hawa sejuk, kebun teh & sayuran", e: "🍵", bin: "dt", why: "Ciri dataran tinggi/pegunungan, seperti kawasan Puncak." },
+        { t: "Gunung Salak & Gede-Pangrango", e: "⛰️", bin: "dt", why: "Gunung yang mengelilingi Bogor." },
+        { t: "Di tepi laut, banyak nelayan", e: "🎣", bin: "ps", why: "Ciri daerah pesisir." },
+        { t: "Ciliwung & Cisadane", e: "🌊", bin: "sg", why: "Sungai yang melewati Bogor." },
+        { t: "Aliran air dari gunung menuju laut, untuk mengairi sawah", e: "💧", bin: "sg", why: "Pengertian sungai." }
+      ] },
+    { prompt: "Lingkungan alami (ciptaan Allah, tanpa dibuat manusia) atau lingkungan buatan (dibuat manusia)?",
+      bins: [{ id: "al", t: "Lingkungan alami", e: "🌳" }, { id: "bu", t: "Lingkungan buatan", e: "🏗️" }],
+      items: [
+        { t: "Gunung", e: "⛰️", bin: "al", why: "Ciptaan Allah." }, { t: "Sungai", e: "🏞️", bin: "al", why: "Terbentuk secara alami." }, { t: "Laut", e: "🌊", bin: "al", why: "Lingkungan alami." }, { t: "Hutan", e: "🌲", bin: "al", why: "Lingkungan alami." },
+        { t: "Rumah", e: "🏠", bin: "bu", why: "Dibuat manusia." }, { t: "Jalan", e: "🛣️", bin: "bu", why: "Dibuat manusia." }, { t: "Kuttab", e: "🏫", bin: "bu", why: "Dibuat manusia untuk belajar." }, { t: "Masjid", e: "🕌", bin: "bu", why: "Dibuat manusia untuk beribadah." }, { t: "Sawah", e: "🌾", bin: "bu", why: "Dibuat manusia untuk menanam padi." }
+      ] }
+  ], "Bentuk muka bumi beragam: dataran rendah, dataran tinggi/pegunungan, pesisir, dan sungai. Bogor dijuluki Kota Hujan, dikelilingi Gunung Salak dan Gede-Pangrango, dilewati Sungai Ciliwung dan Cisadane.") });
+
+const DENAH = { W: 7, H: 6, places: [
+  { x: 0, y: 0, e: "🕌", t: "Masjid" }, { x: 3, y: 0, e: "📚", t: "Perpustakaan" }, { x: 6, y: 0, e: "🌳", t: "Kebun" },
+  { x: 0, y: 2, e: "🚰", t: "Tempat wudu" }, { x: 3, y: 2, e: "⚽", t: "Lapangan" }, { x: 6, y: 2, e: "🏫", t: "Kelas Qonuni 2" },
+  { x: 0, y: 4, e: "🍱", t: "Kantin" }, { x: 6, y: 4, e: "🏫", t: "Kelas Qonuni 1" }, { x: 3, y: 5, e: "🚪", t: "Gerbang" }] };
+const placeAt = (x, y) => DENAH.places.find(p => p.x === x && p.y === y);
+const placeBy = t => DENAH.places.find(p => p.t === t);
+L({ id: "3-2", world: "w3", em: "🧭", title: "Penjelajah Denah Kuttab", sub: "Arah mata angin & membaca denah",
+  tp: "membaca simbol dan arah mata angin pada denah sederhana.", ref: "Pertemuan 10 (Denah & Peta)",
+  run: async api => {
+    const st = api.stage;
+    const rose = `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mata angin"><rect width="400" height="300" fill="var(--card)"/>
+      <circle cx="200" cy="150" r="95" fill="var(--bg2)" stroke="var(--line)" stroke-width="4"/>
+      <path d="M200 50 L215 150 L200 250 L185 150Z" fill="#e04848"/><path d="M200 150 L215 150 L200 250 L185 150Z" fill="#3a6fe0"/>
+      <path d="M100 150 L200 138 L300 150 L200 162Z" fill="#888"/><circle cx="200" cy="150" r="8" fill="#fff" stroke="#333" stroke-width="2"/></svg>`;
+    const sc1 = await labeler(api, [{ title: "Bagian A", prompt: "Pasang arah mata angin. Pada denah, arah utara biasanya digambar ke atas.", cls: "scene", svg: rose,
+      zones: [{ id: "u", x: 50, y: 9 }, { id: "s", x: 50, y: 91 }, { id: "t", x: 82, y: 50 }, { id: "b", x: 18, y: 50 }],
+      items: [{ t: "Utara (U)", id: "u", why: "Utara di atas.", hint: "Utara biasanya di atas." }, { t: "Selatan (S)", id: "s", why: "Selatan berlawanan dengan utara, di bawah.", hint: "Selatan berlawanan dengan utara." },
+        { t: "Timur (T)", id: "t", why: "Jika utara di atas, timur di kanan — arah matahari terbit.", hint: "Matahari terbit di timur; pada denah di sebelah kanan." }, { t: "Barat (B)", id: "b", why: "Barat di kiri — arah matahari terbenam.", hint: "Barat berlawanan dengan timur." }] }], "", 0, 4);
+    // Bagian B: navigasi
+    let pos = { x: 3, y: 5 }, steps = 0, pts = 0;
+    const MISS = [
+      { k: "go", t: "Lapangan", txt: "Pak Guru memanggilmu ke ⚽ Lapangan. Berjalanlah ke sana!" },
+      { k: "follow", txt: "Ikuti petunjuk: dari lapangan, berjalan 3 kotak ke TIMUR. Kamu sampai di mana?", need: { x: 6, y: 2 }, opts: ["Kelas Qonuni 2", "Tempat wudu", "Kebun"], ans: "Kelas Qonuni 2" },
+      { k: "go", t: "Tempat wudu", txt: "Sudah masuk waktu Zuhur. Pergilah ke 🚰 Tempat wudu!" },
+      { k: "go", t: "Masjid", txt: "Sekarang pergilah ke 🕌 Masjid untuk shalat berjamaah." },
+      { k: "ask", txt: "Lihat denah: 🍱 Kantin ada di sebelah mana 🕌 Masjid?", opts: ["Utara", "Selatan", "Timur", "Barat"], ans: "Selatan", why: "Kantin berada di bawah masjid pada denah, jadi di sebelah selatan." },
+      { k: "ask", txt: "📚 Perpustakaan ada di sebelah mana 🌳 Kebun?", opts: ["Utara", "Selatan", "Timur", "Barat"], ans: "Barat", why: "Perpustakaan di kiri kebun pada denah, berarti di sebelah barat." },
+      { k: "ask", txt: "Saat shalat di Bogor, kita menghadap kiblat (Ka'bah di Makkah) ke arah…", opts: ["Barat (agak serong ke utara)", "Timur", "Selatan", "Utara"], ans: "Barat (agak serong ke utara)", why: "Makkah berada di sebelah barat laut Indonesia, jadi kiblat kita menghadap ke barat, agak serong ke utara." }
+    ];
+    let mi = 0, mboxTop;
+    st.innerHTML = "";
+    st.append(h("div", { class: "prompt" }, "Bagian B · Denah Kuttab. Gunakan tombol arah untuk berjalan, lalu selesaikan misinya."));
+    const two = h("div", { class: "two" });
+    const grid = h("div", { class: "card", style: "padding:8px" });
+    const side = h("div", { class: "card" });
+    two.append(grid, side); st.append(mboxTop = h("div", { class: "goal" }), two);
+    function drawGrid() {
+      grid.innerHTML = `<div class="row" style="justify-content:space-between"><b>Denah Kuttab Raudhah</b><span class="small" style="font-weight:800">⬆ U</span></div>`;
+      const g = h("div", { style: `display:grid;grid-template-columns:repeat(${DENAH.W},1fr);gap:4px;margin-top:6px` });
+      for (let y = 0; y < DENAH.H; y++) for (let x = 0; x < DENAH.W; x++) {
+        const p = placeAt(x, y), me = pos.x === x && pos.y === y;
+        g.append(h("div", { style: `aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-size:clamp(1rem,4vw,1.6rem);position:relative;background:${p ? "color-mix(in srgb,var(--w3) 18%,var(--card))" : "var(--bg2)"};border:2px solid ${me ? "var(--acc)" : "var(--line)"}`, title: p ? p.t : "" },
+          me ? "🧒" : p ? p.e : "", p ? h("span", { style: "position:absolute;bottom:1px;font-size:.5rem;font-weight:700;line-height:1;text-align:center" }, me ? "" : p.t) : null));
+      }
+      grid.append(g, h("div", { class: "small muted", style: "margin-top:6px" }, "Keterangan (legenda): " + DENAH.places.map(p => p.e + " " + p.t).join(" · ")));
+    }
+    const pad = h("div", { style: "display:grid;grid-template-columns:repeat(3,64px);gap:6px;justify-content:center;margin:8px 0" });
+    const mv = (dx, dy, n) => h("button", { class: "btn ghost", style: "padding:10px 0", onclick: () => move(dx, dy) }, n);
+    pad.append(h("span"), mv(0, -1, "⬆ U"), h("span"), mv(-1, 0, "⬅ B"), h("span", { class: "center", style: "align-self:center;font-size:1.4rem" }, "🧭"), mv(1, 0, "T ➡"), h("span"), mv(0, 1, "⬇ S"), h("span"));
+    const mbox = mboxTop, qa = h("div"), info = h("div", { class: "small muted" });
+    side.append(pad, info, qa);
+    function move(dx, dy) {
+      const nx = pos.x + dx, ny = pos.y + dy;
+      if (nx < 0 || ny < 0 || nx >= DENAH.W || ny >= DENAH.H) { SND.bad(); fb("Ups, itu pagar kuttab!", "info", 1500); return; }
+      pos = { x: nx, y: ny }; steps++; SND.tick(); drawGrid(); const p = placeAt(nx, ny); info.textContent = `Langkah: ${steps} · Posisi: ${p ? p.t : "jalan setapak"}`; check();
+    }
+    function check() {
+      const M = MISS[mi]; if (!M) return;
+      if (M.k === "go" && placeAt(pos.x, pos.y)?.t === M.t) { pts++; SND.ok(); fb(`Sampai di ${M.t}! Kamu berjalan ${steps} langkah.`, "ok", 3500); next(); }
+      if (M.k === "follow" && pos.x === M.need.x && pos.y === M.need.y && !qa.childElementCount) showOpts(M);
+    }
+    function showOpts(M) {
+      qa.innerHTML = ""; let wrong = false; const o = h("div", { class: "opts" });
+      M.opts.forEach(t => { const b = h("button", { class: "opt" }, t); b.onclick = () => { if (t === M.ans) { if (!wrong) pts++; b.classList.add("ok"); SND.ok(); fb(M.why || `Benar, kamu sampai di ${M.ans}.`, "ok", 5000); $$("button", o).forEach(x => x.disabled = true); setTimeout(next, 1500); } else { wrong = true; b.classList.add("no"); b.disabled = true; SND.bad(); fb("Lihat lagi denahnya. Ingat: utara di atas, timur di kanan.", "bad"); } }; o.append(b); });
+      qa.append(h("p", { class: "prompt" }, M.k === "follow" ? "Kamu sampai di mana?" : ""), o);
+    }
+    function next() {
+      mi++; steps = 0; qa.innerHTML = ""; api.prog(.3 + .7 * mi / MISS.length); api.score(sc1 * .3 + pts / MISS.length * 70);
+      if (mi >= MISS.length) return api.finish(sc1 * .3 + pts / MISS.length * 70, "Denah = gambar letak ruangan/tempat jika dilihat dari atas; peta = gambar wilayah yang lebih luas. Bagian penting denah: judul, arah mata angin (utara biasanya di atas), simbol, dan keterangan (legenda).");
+      showMission();
+    }
+    function showMission() { const M = MISS[mi]; mbox.innerHTML = `🎯 <b>Misi ${mi + 1}/${MISS.length}:</b> ${M.txt}`; if (M.k === "ask") showOpts(M); }
+    drawGrid(); showMission();
+  } });
+
+L({ id: "3-3", world: "w3", em: "🤝", title: "Indonesia yang Beragam", sub: "Suku, bahasa, makanan, profesi",
+  tp: "menyebutkan keragaman suku, bahasa, budaya, dan profesi, serta menunjukkan sikap menghargai perbedaan.", ref: "Pertemuan 11 (Keragaman Sosial Budaya)",
+  run: api => sorter(api, [
+    { prompt: "Makanan khas ini berasal dari daerah mana?",
+      bins: [{ id: "bog", t: "Bogor", e: "🏙️" }, { id: "min", t: "Minangkabau", e: "🐃" }, { id: "yog", t: "Yogyakarta", e: "🏯" }, { id: "plm", t: "Palembang", e: "🌉" }, { id: "pap", t: "Papua", e: "🐦" }],
+      items: [{ t: "Asinan", e: "🥗", bin: "bog", why: "Asinan Bogor." }, { t: "Rendang", e: "🍛", bin: "min", why: "Rendang dari Minangkabau." }, { t: "Gudeg", e: "🍲", bin: "yog", why: "Gudeg dari Yogyakarta." }, { t: "Pempek", e: "🐟", bin: "plm", why: "Pempek dari Palembang." }, { t: "Papeda", e: "🥣", bin: "pap", why: "Papeda dari Papua." }] },
+    { prompt: "Bagaimana mengucapkan “terima kasih” dalam bahasa daerah ini?",
+      bins: [{ id: "sun", t: "Bahasa Sunda", e: "⛰️" }, { id: "jaw", t: "Bahasa Jawa", e: "🏯" }, { id: "min", t: "Bahasa Minang", e: "🐃" }],
+      items: [{ t: "Hatur nuhun", e: "💬", bin: "sun", why: "Bahasa Sunda." }, { t: "Matur nuwun", e: "💬", bin: "jaw", why: "Bahasa Jawa." }, { t: "Tarimo kasih", e: "💬", bin: "min", why: "Bahasa Minang." }] },
+    { prompt: "Sikap mana yang menghargai perbedaan? (Bhinneka Tunggal Ika: berbeda-beda tetapi tetap satu)",
+      bins: [{ id: "ya", t: "Menghargai perbedaan", e: "💚" }, { id: "no", t: "Tidak menghargai", e: "💔" }],
+      items: [
+        { t: "Berteman dengan anak dari suku lain", e: "🤝", bin: "ya", why: "Allah menciptakan kita bersuku-suku agar saling mengenal (QS. Al-Hujurat: 13)." },
+        { t: "Mencoba makanan khas daerah teman", e: "🍛", bin: "ya", why: "Menghargai budaya orang lain." },
+        { t: "Menghormati semua profesi yang halal", e: "👩‍🌾", bin: "ya", why: "Petani, pedagang, guru, dokter — semua saling membutuhkan." },
+        { t: "Menertawakan logat bicara teman", e: "😝", bin: "no", why: "Merendahkan orang lain. Yang paling mulia di sisi Allah adalah yang paling bertakwa." },
+        { t: "Hanya mau bermain dengan yang sesuku", e: "🚫", bin: "no", why: "Perbedaan membuat Indonesia kaya, selama kita saling menghormati." },
+        { t: "Mengejek pekerjaan orang tua teman", e: "👎", bin: "no", why: "Semua profesi yang halal itu mulia dan saling membutuhkan." }
+      ] }
+  ], "Indonesia memiliki ratusan suku bangsa dengan bahasa, rumah adat, makanan, dan adat yang berbeda. Profesi yang halal saling membutuhkan. Bhinneka Tunggal Ika: berbeda-beda tetapi tetap satu.") });
+
+L({ id: "3-4", world: "w3", em: "♻️", title: "Pahlawan Lingkungan", sub: "Pilah sampah kilat & rumah hemat energi",
+  tp: "menyebutkan cara menjaga lingkungan: kebersihan, penghijauan, serta hemat air dan listrik.", ref: "Pertemuan 12 (Menjaga Lingkungan & Evaluasi Bab 3)",
+  run: api => {
+    const st = api.stage; let timer = null; api.onStop(() => clearInterval(timer));
+    const TR = shuffle([
+      ["Kulit pisang", "🍌", "org"], ["Sisa nasi", "🍚", "org"], ["Daun kering", "🍂", "org"], ["Kulit telur", "🥚", "org"], ["Sayur layu", "🥬", "org"], ["Tulang ikan", "🐟", "org"],
+      ["Botol plastik", "🧴", "an"], ["Kaleng minuman", "🥫", "an"], ["Kantong plastik", "🛍️", "an"], ["Sedotan plastik", "🥤", "an"], ["Bungkus permen", "🍬", "an"], ["Kaca pecah", "🍾", "an"]
+    ]);
+    let i = 0, ok = 0, left = 40, scoreA = 0;
+    st.innerHTML = "";
+    st.append(h("div", { class: "prompt" }, "Bagian A · Pilah sampah kilat! Organik (mudah membusuk) atau anorganik (sulit membusuk)? Kamu punya 40 detik."));
+    const top = h("div", { class: "kpi" }); const tb = h("div", { class: "tbar" }, h("i"));
+    const card = h("div", { class: "bigq card", style: "font-size:3.5rem" });
+    const bO = h("button", { class: "btn big", style: "background:#7a5a2b;box-shadow:0 4px 0 #4f3a1a" }, "🟫 Organik");
+    const bA = h("button", { class: "btn big", style: "background:#3a6fe0;box-shadow:0 4px 0 #2a50a8" }, "🟦 Anorganik");
+    const start = h("button", { class: "btn big alt" }, "▶ Mulai");
+    st.append(top, tb, card, h("div", { class: "row c" }, start));
+    const drawTop = () => { top.innerHTML = `<span class="pill">⏱️ ${Math.ceil(left)} detik</span><span class="pill">✔ ${ok}</span><span class="pill">🗑️ ${i}/${TR.length}</span>`; $("i", tb).style.width = left / 40 * 100 + "%"; };
+    const show = () => { if (i >= TR.length || left <= 0) return endA(); card.innerHTML = `${TR[i][1]}<div style="font-size:1.2rem">${TR[i][0]}</div>`; };
+    const ans = k => { if (i >= TR.length || left <= 0) return; const [t, , c] = TR[i]; if (k === c) { ok++; SND.ok(); fb(`✔ ${t}: ${c === "org" ? "organik — bisa diolah menjadi kompos." : "anorganik — pilah dan serahkan ke bank sampah."}`, "ok", 1800); } else { SND.bad(); fb(`${t} termasuk ${c === "org" ? "organik (mudah membusuk)" : "anorganik (sulit membusuk)"}.`, "bad", 2600); } i++; api.prog(.5 * i / TR.length); drawTop(); show(); };
+    bO.onclick = () => ans("org"); bA.onclick = () => ans("an");
+    start.onclick = () => { start.replaceWith(h("div", { class: "row c" }, bO, bA)); drawTop(); show(); timer = setInterval(() => { left -= .1; drawTop(); if (left <= 0) endA(); }, 100); };
+    function endA() {
+      clearInterval(timer); if (scoreA) return; scoreA = Math.max(1, ok / TR.length * 100); api.score(scoreA * .5);
+      st.innerHTML = ""; st.append(h("div", { class: "card" }, h("h3", {}, `🗑️ Kamu memilah ${ok} dari ${TR.length} sampah dengan benar`), h("p", {}, "Sampah plastik bisa bertahan ratusan tahun sebelum terurai, sedangkan sampah organik seperti kulit pisang dan daun dapat diolah menjadi kompos (pupuk alami)."), h("button", { class: "btn alt", onclick: partB }, "Bagian B ➜")));
+    }
+    function partB() {
+      api.prog(.5);
+      const ROOMS = [
+        { r: "Kamar tidur", e: "🛏️", who: "", dev: [["💡", "Lampu", true], ["🌀", "Kipas angin", true]] },
+        { r: "Ruang tamu", e: "🛋️", who: "👨 Ayah sedang membaca buku", dev: [["💡", "Lampu", false], ["📺", "TV menyala", true]] },
+        { r: "Dapur", e: "🍳", who: "", dev: [["🚰", "Keran mengalir", true]] },
+        { r: "Ruang belajar", e: "📚", who: "👧 Adik sedang belajar", dev: [["💡", "Lampu", false], ["🔌", "Pengisi daya HP (sudah penuh)", true]] },
+        { r: "Kamar mandi", e: "🚿", who: "", dev: [["💡", "Lampu", true]] }
+      ];
+      const off = new Set();
+      st.innerHTML = "";
+      st.append(h("div", { class: "prompt" }, "Bagian B · Rumah hemat energi! Matikan alat yang tidak dipakai — tapi jangan matikan yang sedang dibutuhkan orang. Lalu tekan Selesai."));
+      const g = h("div", { class: "acts" });
+      ROOMS.forEach((R, ri) => {
+        const c = h("div", { class: "card", style: "padding:10px" }, h("b", {}, `${R.e} ${R.r}`), h("div", { class: "small muted" }, R.who || "(kosong, tidak ada orang)"));
+        R.dev.forEach(([e, t], di) => { const key = ri + "-" + di; const b = h("button", { class: "opt", style: "display:block;width:100%;margin-top:6px;text-align:left" }, `${e} ${t}: MENYALA`);
+          b.onclick = () => { off.has(key) ? off.delete(key) : off.add(key); b.textContent = `${e} ${t}: ${off.has(key) ? "MATI" : "MENYALA"}`; b.classList.toggle("ok", off.has(key)); SND.click(); }; c.append(b); });
+        g.append(c);
+      });
+      const done = h("button", { class: "btn alt" }, "🏁 Selesai");
+      done.onclick = () => {
+        let right = 0, total = 0, msgs = [];
+        ROOMS.forEach((R, ri) => R.dev.forEach(([e, t, should], di) => { total++; const isOff = off.has(ri + "-" + di); if (isOff === should) right++; else msgs.push(should ? `${e} ${t} di ${R.r.toLowerCase()} masih menyala padahal tidak dipakai.` : `${e} ${t} di ${R.r.toLowerCase()} sedang dipakai — jangan dimatikan.`); }));
+        const sb = right / total * 100;
+        if (msgs.length) { SND.bad(); fb(msgs.slice(0, 2).join("<br>"), "bad", 7000); }
+        api.finish(scoreA * .5 + sb * .5, "Cara menjaga lingkungan: buang sampah pada tempatnya dan pilah organik/anorganik, menanam pohon (penghijauan), hemat air (tutup keran, wudu secukupnya), dan hemat listrik (matikan lampu, kipas, TV bila tidak dipakai; cabut pengisi daya). Bersuci adalah separuh dari iman (HR. Muslim).");
+      };
+      st.append(g, h("div", { class: "row c", style: "margin-top:10px" }, done));
+    }
+    drawTop();
+  } });
+/* ===================== DUNIA 4: IKLIM ===================== */
+function askSeq(container, Q, onEnd, onPt) {
+  let k = 0, ok = 0;
+  const one = () => {
+    container.innerHTML = ""; if (k >= Q.length) return onEnd(ok / Q.length);
+    const q = Q[k]; let wrong = false; const o = h("div", { class: "opts" });
+    if (q.pre) container.append(h("div", { html: q.pre }));
+    q.o.forEach(([t, good]) => { const b = h("button", { class: "opt" }, t); b.onclick = () => {
+      if (q.gate && !q.gate()) { fb(q.gateMsg, "info", 3500); return; }
+      if (good) { if (!wrong) { ok++; onPt && onPt(ok); } b.classList.add("ok"); SND.ok(); fb(q.why, "ok", 6500); $$("button", o).forEach(x => x.disabled = true); setTimeout(() => { k++; one(); }, 1700); }
+      else { wrong = true; b.classList.add("no"); b.disabled = true; SND.bad(); fb(q.hint || "Belum tepat, coba amati lagi.", "bad"); } }; o.append(b); });
+    container.append(h("p", { class: "prompt" }, q.q), o);
+  };
+  one();
+}
+L({ id: "4-1", world: "w4", em: "🌡️", title: "Stasiun Cuaca Mini", sub: "Unsur cuaca, cuaca vs iklim, baca langit",
+  tp: "membedakan cuaca dan iklim serta menyebutkan unsur-unsur cuaca.", ref: "Pertemuan 13 (Cuaca & Iklim)",
+  run: api => sorter(api, [
+    { prompt: "Unsur cuaca apa yang diamati dengan alat atau tanda ini?",
+      bins: [{ id: "suh", t: "Suhu", e: "🌡️" }, { id: "ang", t: "Angin", e: "🌬️" }, { id: "awa", t: "Awan", e: "☁️" }, { id: "huj", t: "Hujan", e: "🌧️" }],
+      items: [
+        { t: "Termometer", e: "🌡️", bin: "suh", why: "Termometer mengukur panas-dinginnya udara." },
+        { t: "Bendera berkibar", e: "🚩", bin: "ang", why: "Angin = udara yang bergerak; terlihat dari bendera yang berkibar." },
+        { t: "Daun bergoyang", e: "🍃", bin: "ang", why: "Tanda ada angin." },
+        { t: "Langit tertutup awan tebal gelap", e: "🌫️", bin: "awa", why: "Awan = kumpulan titik air kecil; awan tebal gelap tanda hujan akan turun." },
+        { t: "Penakar hujan", e: "🧪", bin: "huj", why: "Penakar hujan mengukur banyaknya air hujan." }
+      ] },
+    { prompt: "Cuaca (tempat sempit, waktu singkat) atau iklim (wilayah luas, rata-rata bertahun-tahun)?",
+      bins: [{ id: "cu", t: "Cuaca", e: "⛅" }, { id: "ik", t: "Iklim", e: "🗺️" }],
+      items: [
+        { t: "Pagi ini di Bogor cerah", e: "🌤️", bin: "cu", why: "Satu tempat, waktu singkat = cuaca." },
+        { t: "Sore ini hujan deras di kuttab", e: "🌧️", bin: "cu", why: "Cuaca hari ini." },
+        { t: "Besok siang Jakarta berawan (ramalan BMKG)", e: "📺", bin: "cu", why: "Ramalan cuaca harian dari BMKG." },
+        { t: "Indonesia hangat sepanjang tahun", e: "🇮🇩", bin: "ik", why: "Wilayah luas, rata-rata bertahun-tahun = iklim." },
+        { t: "Jepang punya empat musim", e: "🗾", bin: "ik", why: "Pola iklim negara jauh dari khatulistiwa." },
+        { t: "Indonesia punya musim hujan dan kemarau", e: "🔁", bin: "ik", why: "Pola iklim tropis." }
+      ] }
+  ], "", sc => {
+    const st = api.stage; st.innerHTML = "";
+    st.append(h("div", { class: "prompt" }, "Babak 3 · Jadilah petugas cuaca cilik! Baca keadaan langit, lalu tentukan."));
+    const box = h("div", { class: "card" }); st.append(box);
+    const scn = (sky, t, flag) => `<div class="row" style="font-size:2.4rem;gap:18px;justify-content:center">${sky}<span style="font-size:1.1rem" class="pill">🌡️ ${t} °C</span><span>${flag}</span></div>`;
+    askSeq(box, shuffle([
+      { pre: scn("🌩️☁️☁️", 24, "🚩💨"), q: "Awan tebal & gelap, angin kencang. Apa yang sebaiknya kamu lakukan?", o: [["Bawa payung & angkat jemuran — akan hujan", 1], ["Menjemur pakaian", 0], ["Main layang-layang di lapangan", 0]], why: "Awan tebal dan gelap tanda hujan akan turun." },
+      { pre: scn("☀️", 32, "🏳️"), q: "Langit cerah, suhu 32 °C, bendera diam. Cuacanya…", o: [["Cerah dan panas — cocok menjemur pakaian, jangan lupa minum", 1], ["Akan turun salju", 0], ["Hujan deras", 0]], why: "Langit cerah dan suhu tinggi berarti cuaca panas." },
+      { pre: scn("⛅", 28, "🚩"), q: "Berawan sebagian, angin bertiup sedang. Kegiatan yang cocok…", o: [["Bermain layang-layang", 1], ["Berenang saat petir", 0], ["Memakai mantel tebal", 0]], why: "Angin yang cukup menerbangkan layang-layang." }
+    ]), r3 => api.finish(sc * .6 + r3 * 40, "Cuaca = keadaan udara di tempat sempit dalam waktu singkat. Iklim = rata-rata cuaca di wilayah luas selama bertahun-tahun. Unsur cuaca: suhu (termometer), angin, awan, dan hujan (penakar hujan). BMKG mengamati dan meramalkan cuaca di Indonesia."));
+    api.prog(.66);
+  }, 0, .66) });
+
+/* ---- Lab Matahari: energi matahari harian relatif (insolasi puncak atmosfer)
+   δ = 23,45·sin(2π(284+n)/365); H0 ∝ cosφ·cosδ·sinω0 + ω0·sinφ·sinδ  (Duffie & Beckman, 2006) */
+const MID = [17, 47, 75, 105, 135, 162, 198, 228, 258, 288, 318, 344];
+const BLN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+function insol(latDeg, n) {
+  const r = Math.PI / 180, d = 23.45 * Math.sin(2 * Math.PI * (284 + n) / 365) * r, p = latDeg * r;
+  const c = clamp(-Math.tan(p) * Math.tan(d), -1, 1), w = Math.acos(c);
+  return (1 + .033 * Math.cos(2 * Math.PI * n / 365)) * (Math.cos(p) * Math.cos(d) * Math.sin(w) + w * Math.sin(p) * Math.sin(d));
+}
+const INS0 = insol(0, 80);
+L({ id: "4-2", world: "w4", em: "🌏", title: "Lab Matahari & Iklim Tropis", sub: "Mengapa Indonesia tidak bersalju?",
+  tp: "menjelaskan ciri iklim tropis di Indonesia dan menghubungkannya dengan pakaian, makanan, rumah, dan mata pencaharian.", ref: "Pertemuan 14 (Iklim Indonesia)",
+  run: api => {
+    const st = api.stage; let lat = -6.6, qsc = 0;
+    st.innerHTML = "";
+    st.append(h("div", { class: "prompt" }, "Bagian A · Kunjungi kota-kota di dunia dan amati berapa banyak energi matahari yang diterima setiap bulan."));
+    const two = h("div", { class: "two" });
+    const chart = h("div", { class: "card", style: "padding:8px" }); const side = h("div", { class: "card" });
+    two.append(chart, side); st.append(two);
+    const CITY = [["🇮🇩 Bogor", -6.6], ["🇯🇵 Tokyo", 35.7], ["🇬🇧 London", 51.5]];
+    const cb = h("div", { class: "opts" }); const ll = h("b"); const sl = h("input", { type: "range", min: -10, max: 60, step: .1, value: lat, style: "width:100%", "aria-label": "Lintang" });
+    const qa = h("div");
+    side.append(h("p", { style: "margin:0 0 4px" }, h("b", {}, "📍 Pilih kota:")), cb, h("p", { style: "margin:8px 0 2px" }, "atau geser letak lintang: ", ll), sl, qa);
+    const drawC = () => { cb.innerHTML = ""; CITY.forEach(([t, v]) => cb.append(h("button", { class: "opt" + (Math.abs(lat - v) < .2 ? " ok" : ""), onclick: () => { lat = v; sl.value = v; SND.click(); draw(); } }, t))); };
+    sl.oninput = () => { lat = +sl.value; draw(); };
+    function draw() {
+      drawC(); ll.textContent = Math.abs(lat) < .05 ? "0° (khatulistiwa)" : `${fmt(Math.abs(lat), 1)}° ${lat > 0 ? "LU" : "LS"}`;
+      const v = MID.map(n => insol(lat, n) / INS0 * 100), W = 560, H = 230, bw = (W - 40) / 12;
+      let s = `<svg class="chart" viewBox="0 0 ${W} ${H + 46}" role="img" aria-label="Grafik energi matahari bulanan"><text x="10" y="16" font-size="13" font-weight="700" fill="var(--ink)">☀️ Energi matahari harian (dibanding khatulistiwa = 100)</text>`;
+      v.forEach((x, i) => { const bh = Math.max(2, x / 110 * (H - 40)), cx = 30 + i * bw; const col = x > 85 ? "#ff8a3d" : x > 60 ? "#f0b429" : x > 35 ? "#7cc3e8" : "#3a6fe0";
+        s += `<rect x="${cx + 3}" y="${H - bh}" width="${bw - 6}" height="${bh}" rx="4" fill="${col}"/><text x="${cx + bw / 2}" y="${H - bh - 4}" font-size="10" text-anchor="middle" fill="var(--ink2)">${Math.round(x)}</text><text x="${cx + bw / 2}" y="${H + 14}" font-size="11" text-anchor="middle" fill="var(--ink)">${BLN[i]}</text>`;
+        if (lat > 23.5) { const ss = [11, 0, 1].includes(i) ? "❄️" : [2, 3, 4].includes(i) ? "🌸" : [5, 6, 7].includes(i) ? "☀️" : "🍂"; s += `<text x="${cx + bw / 2}" y="${H + 34}" font-size="14" text-anchor="middle">${ss}</text>`; }
+        else if (Math.abs(lat) <= 10) s += `<text x="${cx + bw / 2}" y="${H + 34}" font-size="14" text-anchor="middle">${i >= 9 || i <= 2 ? "🌧️" : "☀️"}</text>`;
+      });
+      s += `</svg>`;
+      chart.innerHTML = s + `<p class="small muted" style="margin:4px 0 0">${lat > 23.5 ? "Jauh dari khatulistiwa: energi matahari sangat berubah → 4 musim (❄️ dingin, 🌸 semi, ☀️ panas, 🍂 gugur)." : Math.abs(lat) <= 10 ? "Dekat khatulistiwa: energi matahari tinggi sepanjang tahun → iklim tropis. Musim hujan 🌧️ (± Okt–Mar) & kemarau ☀️ (± Apr–Sep) diatur oleh angin." : "Daerah peralihan."}</p>`;
+    }
+    draw();
+    askSeq(qa, [
+      { q: "Amati grafik Bogor. Energi matahari di Bogor sepanjang tahun…", o: [["Tinggi dan hampir sama setiap bulan", 1], ["Sangat berubah: ada bulan yang sangat kecil", 0]], why: "Bogor dekat khatulistiwa, jadi mendapat sinar matahari hampir sepanjang tahun. Inilah iklim tropis: hangat sepanjang tahun (dataran rendah ± 25–28 °C).", gate: () => lat < 10, gateMsg: "Pilih Bogor dulu, ya." },
+      { q: "Sekarang pindah ke London. Pada bulan apa energi mataharinya paling kecil?", o: [["Desember", 1], ["Juni", 0], ["Maret", 0]], why: "Di London energi matahari paling kecil sekitar Desember — saat itu musim dingin, bahkan bisa turun salju!", gate: () => lat > 45, gateMsg: "Pilih kota London dulu, lalu amati grafiknya." },
+      { q: "Jadi, mengapa Indonesia tidak punya musim salju dan hanya punya dua musim?", o: [["Karena dilalui garis khatulistiwa sehingga sinar matahari kuat sepanjang tahun", 1], ["Karena Indonesia punya banyak gunung", 0], ["Karena Indonesia dekat kutub", 0]], why: "Tepat! Negara jauh dari khatulistiwa seperti Jepang dan Inggris punya empat musim." }
+    ], r => { qsc = r; partB(); }, ok => api.score(ok / 3 * 50));
+    function partB() {
+      api.prog(.5); st.innerHTML = "";
+      sorter(api, [{ prompt: "Bagian B · Bagaimana iklim tropis memengaruhi kehidupan kita?",
+        bins: [{ id: "pak", t: "Pakaian", e: "👕" }, { id: "mak", t: "Makanan & tanaman", e: "🍌" }, { id: "rum", t: "Rumah", e: "🏠" }, { id: "kerja", t: "Mata pencaharian", e: "👩‍🌾" }],
+        items: [
+          { t: "Baju tipis yang menyerap keringat", e: "👕", bin: "pak", why: "Udara hangat sepanjang tahun." }, { t: "Payung & jas hujan saat musim hujan", e: "☂️", bin: "pak", why: "Curah hujan tinggi." },
+          { t: "Padi, singkong, pisang", e: "🌾", bin: "mak", why: "Tanaman tropis tumbuh subur." }, { t: "Mangga, rambutan, durian", e: "🥭", bin: "mak", why: "Buah-buahan tropis yang beragam." },
+          { t: "Atap miring", e: "🏠", bin: "rum", why: "Agar air hujan cepat mengalir." }, { t: "Banyak ventilasi", e: "🪟", bin: "rum", why: "Agar udara sejuk." },
+          { t: "Petani menanam padi saat musim hujan", e: "🌧️", bin: "kerja", why: "Padi butuh banyak air." }, { t: "Petani garam bekerja saat kemarau", e: "🧂", bin: "kerja", why: "Air laut cepat menguap oleh panas matahari." }
+        ] }], "", sb => api.finish(qsc * 50 + sb * .5, "Indonesia dilalui garis khatulistiwa sehingga beriklim tropis: udara hangat sepanjang tahun, curah hujan tinggi, dan dua musim (hujan ± Okt–Mar, kemarau ± Apr–Sep). Iklim memengaruhi pakaian, makanan, rumah, dan mata pencaharian."), .5, .5);
+    }
+  } });
+
+L({ id: "4-3", world: "w4", em: "🌍", title: "Lab Rumah Kaca: Selamatkan Bumi", sub: "Perubahan iklim & aksi pelestarian",
+  tp: "menjelaskan penyebab dan dampak perubahan iklim, serta upaya pelestarian iklim (hemat energi, tanam pohon, 3R).", ref: "Pertemuan 15 (Perubahan Iklim) & Pertemuan 16 (Pelestarian Iklim)",
+  run: api => {
+    const st = api.stage; let gas = 2, raf = null, pts = 0; api.onStop(() => cancelAnimationFrame(raf));
+    const temp = g => 14 + .6 * (g - 2);
+    function earth(g) {
+      const back = Math.min(5, Math.round(g / 2)), outN = Math.max(0, 5 - back);
+      return `<svg viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Efek rumah kaca"><rect width="600" height="340" fill="#0f1733"/>
+      ${Array.from({ length: 25 }, (_, i) => `<circle cx="${(i * 97) % 600}" cy="${(i * 53) % 150}" r="1.3" fill="#fff" opacity=".7"/>`).join("")}
+      <circle cx="70" cy="60" r="38" fill="#ffd23f"/>
+      <path d="M-20 340 Q300 90 620 340Z" fill="rgba(140,200,255,${(.12 + g * .07).toFixed(2)})" stroke="rgba(160,210,255,.6)" stroke-width="2"/>
+      <text x="470" y="150" font-size="12" fill="#cfe6ff">lapisan udara (gas rumah kaca)</text>
+      <path d="M40 340 Q300 170 560 340Z" fill="#2f7fd0"/><path d="M150 340 Q220 260 300 280 Q360 250 430 340Z" fill="#4caf50"/>
+      ${[0, 1, 2].map(i => `<line x1="${100 + i * 40}" y1="${80 + i * 10}" x2="${230 + i * 60}" y2="${250 - i * 10}" stroke="#ffd23f" stroke-width="4" marker-end="url(#ya)"/>`).join("")}
+      <defs><marker id="ya" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ffd23f"/></marker><marker id="ra" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ff5a4a"/></marker></defs>
+      ${Array.from({ length: outN }, (_, i) => `<path d="M${330 + i * 30} 250 q8 -20 0 -40 q-8 -20 0 -40 q8 -20 0 -40 q-8 -20 0 -40" fill="none" stroke="#ff5a4a" stroke-width="3" marker-end="url(#ra)"/>`).join("")}
+      ${Array.from({ length: back }, (_, i) => `<path d="M${200 + i * 26} 255 q6 -18 0 -36 q-6 -18 0 -30 q14 -10 20 4 q6 18 0 36" fill="none" stroke="#ff9a3a" stroke-width="3" marker-end="url(#ra)"/>`).join("")}
+      <rect x="555" y="190" width="18" height="120" rx="9" fill="#fff"/><rect x="559" y="${300 - clamp((temp(g) - 12) * 10, 4, 105)}" width="10" height="${clamp((temp(g) - 12) * 10, 4, 105)}" fill="#ff4a3a"/>
+      <text x="564" y="180" font-size="13" fill="#fff" text-anchor="middle">${fmt(temp(g), 1)}°</text></svg>`;
+    }
+    const legend = `<p class="small muted" style="margin:4px 0">☀️ Panah kuning: sinar matahari masuk · 🔴 panah merah: panas keluar ke angkasa · 🟠 panas yang tertahan dan memantul kembali. Angka suhu hanyalah <b>ilustrasi</b>.</p>`;
+    function m1() {
+      st.innerHTML = ""; api.prog(0);
+      st.append(h("div", { class: "prompt" }, "Misi 1 · Bumi diselimuti lapisan udara yang menahan sebagian panas agar bumi cukup hangat untuk kehidupan. Apa yang terjadi jika asap dan gas dari kegiatan manusia bertambah?"));
+      const sc = h("div", { class: "scene", html: earth(gas) }); st.append(sc, h("div", { html: legend }));
+      const qa = h("div", { class: "card" }); st.append(qa);
+      const ACT = [["🚗", "Kendaraan bermotor makin banyak", 2], ["🏭", "Pabrik & pembangkit listrik batu bara", 2.5], ["🪓", "Hutan ditebang", 2], ["🔥", "Membakar sampah", 1], ["💡", "Memakai listrik dengan boros", 1]];
+      let pred = null;
+      const o = h("div", { class: "opts" });
+      [["Bumi makin panas", "panas"], ["Bumi makin dingin", "dingin"], ["Tidak berubah", "sama"]].forEach(([t, k]) => o.append(h("button", { class: "opt", onclick: e => { pred = k; $$("button", o).forEach(b => b.classList.remove("ok")); e.currentTarget.classList.add("ok"); go.disabled = false; SND.click(); } }, t)));
+      const go = h("button", { class: "btn", disabled: true }, "▶ Tambahkan kegiatan manusia");
+      go.onclick = async () => {
+        go.disabled = true; $$("button", o).forEach(b => b.disabled = true);
+        const lg = h("div", { class: "log" }); qa.append(lg);
+        for (const [e, t, g] of ACT) { const from = gas, to = gas + g; for (let s = 1; s <= 10; s++) { gas = from + (to - from) * s / 10; sc.innerHTML = earth(gas); await sleep(45); } lg.append(h("div", {}, `${e} ${t} → lapisan gas makin tebal`)); SND.tick(); }
+        const ok = pred === "panas"; if (ok) pts++; (ok ? SND.ok : SND.bad)(); api.score(pts / 4 * 100);
+        qa.append(h("div", { class: "goal", html: `${ok ? "🎯 Prediksimu tepat!" : "🔁 Hasilnya berbeda dari prediksimu."} Lapisan gas makin tebal seperti selimut: panas matahari yang masuk sulit keluar, sehingga suhu rata-rata bumi naik. Inilah <b>pemanasan global</b>, bagian dari <b>perubahan iklim</b>.` }), h("button", { class: "btn alt", onclick: m2 }, "Misi 2 ➜"));
+      };
+      qa.append(h("p", { class: "prompt" }, "🤔 Prediksimu?"), o, h("div", { class: "row", style: "margin-top:8px" }, go));
+    }
+    function m2() {
+      st.innerHTML = "";
+      sorter(api, [{ prompt: "Misi 2 · Pilah: mana PENYEBAB perubahan iklim dan mana DAMPAKNYA?",
+        bins: [{ id: "seb", t: "Penyebab", e: "🏭" }, { id: "dam", t: "Dampak", e: "🌡️" }],
+        items: [
+          { t: "Asap kendaraan bermotor", e: "🚗", bin: "seb", why: "Menambah gas yang memanaskan bumi." }, { t: "Pembangkit listrik batu bara", e: "🏭", bin: "seb", why: "Membakar batu bara menghasilkan gas rumah kaca." },
+          { t: "Penebangan hutan", e: "🪓", bin: "seb", why: "Pohon menyerap gas yang memanaskan bumi; tanpa hutan gas itu makin banyak." }, { t: "Membakar sampah", e: "🔥", bin: "seb", why: "Asapnya menambah gas di udara." },
+          { t: "Udara terasa lebih panas", e: "🥵", bin: "dam", why: "Suhu rata-rata bumi naik." }, { t: "Musim tidak menentu", e: "🌦️", bin: "dam", why: "Hujan saat seharusnya kemarau, atau kemarau sangat panjang." },
+          { t: "Banjir & kekeringan lebih sering, gagal panen", e: "🌊", bin: "dam", why: "Pola hujan berubah." }, { t: "Es kutub mencair, air laut naik", e: "🧊", bin: "dam", why: "Mengancam daerah pantai." }
+        ] }], "", sc => { pts += sc / 100; api.score(pts / 4 * 100); m3(); }, .25, .25);
+    }
+    function m3() {
+      api.prog(.5); gas = 10.5; const BUD = 4; const picked = new Set(); let bad = 0, tries = 0;
+      const CARDS = [
+        { e: "🌳", t: "Menanam & merawat pohon", g: -2.5 }, { e: "🚲", t: "Jalan kaki / bersepeda untuk jarak dekat", g: -1.5 }, { e: "💡", t: "Matikan lampu, kipas, TV; cabut pengisi daya", g: -1.5 },
+        { e: "♻️", t: "3R & menabung di bank sampah", g: -1 }, { e: "🚭", t: "Tidak membakar sampah", g: -1 },
+        { e: "🛵", t: "Naik motor ke warung sebelah rumah", g: 1, bad: "Untuk jarak dekat, jalan kaki saja!" }, { e: "❄️", t: "AC & lampu menyala terus walau kosong", g: 1, bad: "Listrik boros menambah asap pembangkit listrik." }, { e: "🔥", t: "Bakar tumpukan daun & plastik", g: 1, bad: "Asapnya mencemari udara; jadikan daun kompos." }
+      ];
+      st.innerHTML = "";
+      st.append(h("div", { class: "prompt" }, `Misi 3 · Bumi sudah terlalu panas! Pilih maksimal ${BUD} aksi agar lapisan gas kembali tipis (suhu ilustrasi ≤ 15,5°).`));
+      const two = h("div", { class: "two" }); const sc = h("div", { class: "scene" }); const side = h("div", { class: "card" });
+      two.append(sc, side); st.append(two);
+      const g = h("div", { class: "acts" }); const info = h("div", { class: "kpi", style: "margin:6px 0" });
+      const draw = () => {
+        const cur = gas + [...picked].reduce((a, i) => a + CARDS[i].g, 0); sc.innerHTML = earth(Math.max(1, cur));
+        info.innerHTML = `<span class="pill">🎯 Aksi: ${picked.size}/${BUD}</span><span class="pill">🌡️ ${fmt(temp(Math.max(1, cur)), 1)}°</span>`;
+        g.innerHTML = "";
+        CARDS.forEach((c, i) => { const on = picked.has(i); g.append(h("button", { class: "act" + (on ? (c.bad ? " badpick" : " on") : ""), onclick: () => {
+          if (on) picked.delete(i); else { if (picked.size >= BUD) { fb("Aksi sudah 4. Lepaskan salah satu dulu.", "info", 2500); return; } picked.add(i); if (c.bad) { bad++; SND.bad(); fb("⚠️ " + c.bad, "bad"); } else SND.ok(); }
+          draw(); } }, h("span", { class: "e" }, c.e), h("b", {}, c.t))); });
+        return cur;
+      };
+      const done = h("button", { class: "btn alt" }, "🌍 Lihat hasil aksiku");
+      done.onclick = () => {
+        tries++; const cur = draw();
+        if (temp(cur) <= 15.5 && ![...picked].some(i => CARDS[i].bad)) { pts += tries === 1 && !bad ? 1 : .5; api.score(pts / 4 * 100); SND.ok(); fb("Alhamdulillah, bumi kembali sejuk! Aksi kecil yang dilakukan banyak orang berdampak besar.", "ok", 6000); setTimeout(m4, 1500); }
+        else { SND.bad(); fb("Bumi masih terlalu panas atau masih ada aksi yang merusak. Pilih aksi yang paling banyak mengurangi gas!", "bad", 6000); }
+      };
+      side.append(info, g, h("div", { class: "row", style: "margin-top:8px" }, done));
+      draw();
+    }
+    function m4() {
+      st.innerHTML = "";
+      sorter(api, [{ prompt: "Misi 4 · Kurangi sampah dengan 3R! Masukkan setiap aksi ke kelompoknya.",
+        bins: [{ id: "red", t: "Kurangi (Reduce)", e: "✋" }, { id: "reu", t: "Gunakan kembali (Reuse)", e: "🔁" }, { id: "rec", t: "Daur ulang (Recycle)", e: "♻️" }],
+        items: [
+          { t: "Membawa botol minum sendiri", e: "🧴", bin: "red", why: "Mengurangi botol plastik sekali pakai." }, { t: "Membawa tas belanja sendiri", e: "👜", bin: "red", why: "Mengurangi kantong plastik." },
+          { t: "Botol bekas menjadi pot", e: "🪴", bin: "reu", why: "Memakai kembali barang bekas." }, { t: "Kaleng bekas menjadi tempat pensil", e: "✏️", bin: "reu", why: "Menggunakan kembali." },
+          { t: "Plastik diolah menjadi barang baru", e: "🏭", bin: "rec", why: "Daur ulang: sampah diolah menjadi barang baru." }, { t: "Kertas bekas diolah menjadi kertas daur ulang", e: "📄", bin: "rec", why: "Daur ulang." }
+        ] }], "", sc => api.finish((pts + sc / 100) / 4 * 100, "Perubahan iklim terjadi karena perbuatan manusia (asap kendaraan, batu bara, tebang hutan, bakar sampah, boros listrik). Kita bisa menjaganya: hemat energi, tanam pohon (menjadi sedekah — HR. Al-Bukhari dan Muslim), 3R, bank sampah, dan berjalan kaki/bersepeda untuk jarak dekat."), .75, .25);
+    }
+    m1();
+  } });
+
+/* ===================== MISI AKHIR ===================== */
+const BS = [
+  ["Matahari adalah sumber energi terbesar bagi bumi.", true, "Benar."],
+  ["Senter mengubah energi kimia → listrik → cahaya.", true, "Benar — energi kimia di baterai."],
+  ["Setrika mengubah energi listrik menjadi energi bunyi.", false, "Salah — setrika: listrik → panas."],
+  ["Kincir angin mengubah energi angin menjadi energi gerak.", true, "Benar."],
+  ["Gaya adalah dorongan atau tarikan.", true, "Benar."],
+  ["Gaya gesek pada permukaan kasar lebih kecil daripada permukaan halus.", false, "Salah — permukaan kasar gesekannya besar."],
+  ["Magnet dapat menarik penggaris plastik.", false, "Salah — magnet menarik benda dari besi dan baja."],
+  ["Dua kutub magnet yang sejenis akan tolak-menolak.", true, "Benar."],
+  ["Gravitasi di Bulan lebih kecil daripada di Bumi.", true, "Benar — sekitar seperenamnya."],
+  ["Pada denah, arah utara biasanya digambar ke bawah.", false, "Salah — utara biasanya ke atas."],
+  ["Sampah kulit pisang termasuk sampah anorganik.", false, "Salah — kulit pisang organik (mudah membusuk)."],
+  ["Cuaca adalah rata-rata keadaan udara di wilayah luas selama bertahun-tahun.", false, "Salah — itu pengertian iklim."],
+  ["Indonesia beriklim tropis karena dilalui garis khatulistiwa.", true, "Benar."],
+  ["Menebang hutan dapat memperparah perubahan iklim.", true, "Benar — pohon menyerap gas yang memanaskan bumi."],
+  ["Membawa botol minum sendiri termasuk kegiatan daur ulang.", false, "Salah — itu termasuk mengurangi (reduce)."]
+];
+L({ id: "boss", world: "boss", em: "🏆", title: "Misi Akhir Semester", sub: "Pilah per bab + kilat Benar/Salah",
+  tp: "merangkum materi IPAS satu semester dan menjawab soal evaluasi dengan teliti.", ref: "Pertemuan 16 (Pelestarian Iklim & Evaluasi Akhir)",
+  run: api => {
+    let timer = null; api.onStop(() => clearInterval(timer));
+    sorter(api, [{ prompt: "Babak 1 · Termasuk materi bab mana?",
+      bins: [{ id: "en", t: "Bab 1 Energi", e: "⚡" }, { id: "ga", t: "Bab 2 Gaya", e: "🧲" }, { id: "tt", t: "Bab 3 Tempat Tinggalku", e: "🏡" }, { id: "ik", t: "Bab 4 Iklim", e: "🌦️" }],
+      items: [
+        { t: "Bentuk energi: panas, cahaya, bunyi", e: "🔊", bin: "en", why: "Bab 1." }, { t: "Kincir kertas", e: "🎐", bin: "en", why: "Bab 1 — perubahan energi." },
+        { t: "Rem sepeda & sandal bergerigi", e: "🚲", bin: "ga", why: "Bab 2 — gaya gesek." }, { t: "Kutub utara & selatan magnet", e: "🧲", bin: "ga", why: "Bab 2." },
+        { t: "Denah & arah mata angin", e: "🧭", bin: "tt", why: "Bab 3." }, { t: "Bhinneka Tunggal Ika", e: "🤝", bin: "tt", why: "Bab 3 — keragaman." },
+        { t: "Termometer & penakar hujan", e: "🌡️", bin: "ik", why: "Bab 4 — unsur cuaca." }, { t: "Pemanasan global", e: "🌍", bin: "ik", why: "Bab 4 — perubahan iklim." }
+      ] }], "", s1 => {
+      api.prog(.3);
+      const st = api.stage; const qs = shuffle(BS).slice(0, 10); let i = 0, correct = 0, lives = 3, streak = 0, left = 15, lock = false;
+      st.innerHTML = "";
+      st.append(h("div", { class: "prompt" }, "Babak 2 · Kilat Benar atau Salah! 15 detik per pernyataan, 3 nyawa."));
+      const top = h("div", { class: "row" }); const tb = h("div", { class: "tbar" }, h("i")); const q = h("div", { class: "bigq card" });
+      const bT = h("button", { class: "btn big", style: "background:var(--ok)" }, "✔ Benar"), bF = h("button", { class: "btn big", style: "background:var(--bad);box-shadow:0 4px 0 #a33" }, "✘ Salah");
+      st.append(top, tb, q, h("div", { class: "row c" }, bT, bF));
+      const drawTop = () => { top.innerHTML = ""; top.append(h("span", { class: "hearts" }, "❤️".repeat(lives) + "🤍".repeat(3 - lives)), h("span", { class: "pill" }, `Soal ${Math.min(i + 1, qs.length)}/${qs.length}`), h("span", { class: "pill" }, `✔ ${correct}`), streak >= 2 ? h("span", { class: "pill" }, `🔥 beruntun ${streak}`) : null); };
+      const end = () => { clearInterval(timer); api.finish(s1 * .4 + correct / qs.length * 60, "Bab 1 Energi: sumber, bentuk, dan perubahan energi. Bab 2 Gaya: otot, gesek, magnet, gravitasi, pegas dan pengaruhnya. Bab 3 Tempat tinggalku: geografi, denah, keragaman, menjaga lingkungan. Bab 4 Iklim: cuaca & iklim, iklim tropis, perubahan iklim dan pelestariannya."); };
+      const next = () => { if (i >= qs.length || lives <= 0) return end(); lock = false; left = 15; q.textContent = qs[i][0]; drawTop(); clearInterval(timer); timer = setInterval(() => { left -= .1; $("i", tb).style.width = left / 15 * 100 + "%"; if (left <= 0) answer(null); }, 100); };
+      const answer = v => { if (lock) return; lock = true; clearInterval(timer); const [, ans, why] = qs[i];
+        if (v === ans) { correct++; streak++; SND.ok(); fb("✔ " + why, "ok", 3500); } else { lives--; streak = 0; SND.bad(); fb((v === null ? "⏰ Waktu habis! " : "") + why, "bad", 4500); }
+        i++; api.prog(.3 + .7 * i / qs.length); api.score(s1 * .4 + correct / qs.length * 60); drawTop(); setTimeout(next, 1700); };
+      bT.onclick = () => answer(true); bF.onclick = () => answer(false);
+      next();
+    }, 0, .3);
+  } });
+/* ===================== RAPOR, PANDUAN, GURU ===================== */
+function rapor() {
+  const date = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+  const box = h("div", {});
+  box.append(h("h2", {}, "📋 Rapor Misi Bumi Kita"), h("p", {}, `Nama: `, h("b", {}, S.name || "-"), ` · Tanggal: ${date}`));
+  const groups = [...WORLDS.map(w => [w, LEVELS.filter(l => l.world === w.id)]), [{ name: "Misi Akhir", bab: "Review" }, LEVELS.filter(l => l.world === "boss")]];
+  const sum = h("div", { class: "kpi", style: "margin-bottom:8px" });
+  groups.forEach(([w, ls]) => { const played = ls.filter(l => S.best[l.id]); const avg = played.length ? Math.round(played.reduce((a, l) => a + S.best[l.id], 0) / ls.length) : 0; sum.append(h("span", { class: "pill" }, `${w.bab}: ${avg}`)); });
+  box.append(h("p", { class: "small muted" }, "Nilai bab = rata-rata nilai terbaik semua tantangan di bab itu (tantangan yang belum dimainkan dihitung 0)."), sum);
+  const t = h("table", { class: "rap" }, h("tr", {}, h("th", {}, "Tantangan"), h("th", {}, "Tujuan pembelajaran (Aku bisa…)"), h("th", {}, "Nilai"), h("th", {}, "Status")));
+  const recs = [];
+  groups.forEach(([w, ls]) => ls.forEach(l => {
+    const v = S.best[l.id] || 0;
+    const status = !v ? ["Belum dimainkan", "#999"] : v >= 70 ? ["Tuntas", "var(--ok)"] : ["Perlu latihan", "var(--warn)"];
+    if (v < 70) recs.push(`${l.em} ${l.title} — ${l.ref}`);
+    t.append(h("tr", {}, h("td", {}, h("b", {}, `${l.em} ${l.title}`), h("br"), h("span", { class: "small muted" }, w.bab)), h("td", { class: "small" }, l.tp), h("td", { html: `<b>${v}</b><br><span class="stars small">${starStr(stars(v))}</span>` }), h("td", {}, h("span", { class: "badge", style: `background:${status[1]}` }, status[0]))));
+  }));
+  box.append(t);
+  box.append(h("h3", {}, "Saran belajar"), recs.length ? h("ul", { class: "small" }, recs.map(r => h("li", {}, r))) : h("p", {}, "Masya Allah! Semua misi tuntas. Pertahankan dan bantu temanmu belajar."));
+  box.append(h("div", { class: "row c noprint" }, h("button", { class: "btn", onclick: () => window.print() }, "🖨️ Cetak / Simpan PDF"), h("button", { class: "btn ghost", onclick: closeModal }, "Tutup")));
+  modal(box);
+}
+function guide() {
+  modal(h("div", {}, h("h2", {}, "📖 Cara Bermain"),
+    h("ol", {},
+      h("li", {}, "Tulis namamu lalu tekan ", h("b", {}, "Mulai Misi"), "."),
+      h("li", {}, "Pilih dunia (Bab 1–4). Misi terbuka berurutan di setiap dunia."),
+      h("li", {}, h("b", {}, "Seret"), " kartu ke tempat yang tepat — atau ", h("b", {}, "ketuk kartu lalu ketuk tempatnya"), " (mudah di ponsel)."),
+      h("li", {}, "Di laboratorium, ", h("b", {}, "buat prediksi dulu"), ", jalankan simulasi, amati, lalu jelaskan."),
+      h("li", {}, "Setiap jawaban langsung diberi penjelasan. Jawaban benar pada percobaan pertama memberi poin penuh."),
+      h("li", {}, "Kumpulkan ⭐: 90+ = 3 bintang, 70+ = 2 bintang. Selesaikan 9 misi untuk membuka ", h("b", {}, "Misi Akhir"), "."),
+      h("li", {}, "Lihat ", h("b", {}, "📋 Rapor"), " untuk mengetahui tujuan belajar yang sudah tuntas.")),
+    h("p", { class: "small muted" }, "Tombol 🔊 menyalakan/mematikan suara. Kemajuan tersimpan di perangkat ini (bila browser mengizinkan)."),
+    h("div", { class: "row c" }, h("button", { class: "btn", onclick: closeModal }, "Siap!"))));
+}
+function forTeacher() {
+  const refs = [
+    ["Fitri, A., Kusumawardhani, A., Fatimah, K., Setianingsih, N. I., Nursya'bani, K. K., & Rasa, A. A. (2023). <i>Ilmu Pengetahuan Alam dan Sosial untuk SD/MI Kelas IV</i> (Edisi Revisi). Pusat Perbukuan, Kemendikbudristek.", "https://static.buku.kemdikbud.go.id/content/pdf/bukuteks/kurikulum21/IPAS_BS_KLS_IV_Rev.pdf", "Acuan cakupan Bab 1–4 (Mengubah Bentuk Energi, Gaya di Sekitar Kita, Di Sini Tempat Tinggalku!, Iklim dan Perubahannya) yang selaras dengan materi Qonuni 2."],
+    ["Wolfe, G., Gasper, E., Stoke, J., dkk. (2015). <i>College Physics for AP® Courses</i>, Bab 5.1 Friction. OpenStax.", "https://openstax.org/books/college-physics-ap-courses/pages/5-1-friction", "Dasar Lab Luncur: gaya gesek melawan gerak dan besarnya bergantung pada pasangan permukaan (koefisien 0,03–0,7); perlambatan a = μg sehingga jarak d = v²/(2μg)."],
+    ["U.S. Department of Energy, Wind Energy Technologies Office. <i>How Do Wind Turbines Work?</i>", "https://www.energy.gov/eere/wind/how-do-wind-turbines-work", "Dasar Lab Kincir: angin mendorong baling-baling sehingga rotor berputar, rotor memutar generator, dan generator menghasilkan listrik."],
+    ["NASA Science for Kids. <i>What Is the Greenhouse Effect?</i>", "https://science.nasa.gov/kids/earth/what-is-the-greenhouse-effect/", "Dasar Lab Rumah Kaca: gas di atmosfer menahan panas agar bumi cukup hangat; tambahan gas dari pembakaran batu bara, minyak, dan bensin memperkuat efek ini dan memanaskan bumi; tumbuhan menyerap CO₂."],
+    ["Duffie, J. A., & Beckman, W. A. (2006). <i>Solar Engineering of Thermal Processes</i> (3rd ed., hlm. 13–14). Wiley. (Rumus deklinasi Cooper, 1969; ringkasan: pvlib)", "https://pvlib-python.readthedocs.io/en/stable/reference/generated/pvlib.solarposition.declination_cooper69.html", "Dasar Lab Matahari: deklinasi matahari dan energi matahari harian dihitung per bulan untuk tiap lintang, menunjukkan mengapa daerah khatulistiwa hangat sepanjang tahun."],
+    ["Plass, J. L., Homer, B. D., & Kinzer, C. K. (2015). Foundations of game-based learning. <i>Educational Psychologist, 50</i>(4), 258–283.", "https://doi.org/10.1080/00461520.2015.1122533", "Mekanik permainan (mendorong, memutar magnet, berjalan di denah, memilah) dipilih agar sejalan dengan kegiatan berpikir yang dilatih, bukan hiasan."],
+    ["Hattie, J., & Timperley, H. (2007). The power of feedback. <i>Review of Educational Research, 77</i>(1), 81–112.", "https://doi.org/10.3102/003465430298487", "Setiap tindakan langsung diberi umpan balik yang menjelaskan alasan dan petunjuk perbaikan."],
+    ["White, R., & Gunstone, R. (1992). <i>Probing Understanding</i>. London: Falmer Press. (ISBN 9780750700481)", "https://arbs.nzcer.org.nz/node/7187", "Strategi Prediksi–Amati–Jelaskan (POE) di Lab Kincir, Lab Luncur, Lab Magnet, dan Lab Rumah Kaca."]
+  ];
+  modal(h("div", {}, h("h2", {}, "👩‍🏫 Untuk Guru"),
+    h("p", { class: "small" }, "Game ini memetakan 16 pertemuan IPAS Semester 1 Qonuni 2 (Kuttab Raudhah Nabawiyah Bogor) ke 13 misi + 1 misi akhir. Setiap misi mencantumkan tujuan “Aku bisa…” dan nomor pertemuannya, sehingga dapat dipakai per pertemuan, sebagai remedial, atau review semester."),
+    h("p", { class: "small" }, h("b", {}, "Penyederhanaan model: "), "Lab Luncur memakai rumus perlambatan gesekan d = v²/(2μg) dengan koefisien gesek perkiraan (kisaran tabel OpenStax); Lab Kincir bersifat kualitatif (makin kencang & makin menghadap angin, makin cepat berputar); lompatan Bumi–Bulan memakai h = v²/(2g) dengan g Bumi 9,8 dan g Bulan 1,62 m/s²; Lab Matahari menghitung energi matahari harian di puncak atmosfer (tanpa awan) dari rumus deklinasi Cooper; suhu di Lab Rumah Kaca hanyalah ilustrasi, bukan angka ilmiah; denah kuttab bersifat rekaan."),
+    h("label", { class: "row small", style: "margin:8px 0" }, h("input", { type: "checkbox", ...(S.guru ? { checked: "" } : {}), onchange: e => { S.guru = e.target.checked; save(); } }), " Mode Guru: buka semua misi (untuk demonstrasi di kelas)"),
+    h("button", { class: "btn ghost small", onclick: () => { if (confirm("Hapus semua nilai di perangkat ini?")) { S.best = {}; save(); updTop(); closeModal(); worldMap(); } } }, "🗑️ Reset nilai"),
+    h("h3", {}, "Referensi ilmiah"),
+    h("ol", { class: "refs" }, refs.map(([c, u, use]) => h("li", { html: `${c} <a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\//, "")}</a><br><span class="muted">Penerapan: ${use}</span>` }))),
+    h("p", { class: "small muted" }, "Materi utama: Materi IPAS Semester 1 Qonuni 2, Kuttab Raudhah Nabawiyah Bogor (Pertemuan 1–16)."),
+    h("div", { class: "row c" }, h("button", { class: "btn", onclick: () => { closeModal(); if ($("#app .worlds")) worldMap(); } }, "Tutup"))));
+}
+
+/* ===================== MULAI ===================== */
+$("#btnHome").onclick = () => { CUR && CUR.stop && CUR.stop(); S.name ? worldMap() : home(); };
+$("#btnRapor").onclick = rapor;
+$("#btnSnd").onclick = () => { S.muted = !S.muted; save(); updTop(); SND.click(); };
+updTop(); home();
+</script>
+</body></html>
